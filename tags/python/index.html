@@ -7,24 +7,18 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>[ 4 ] 手把手搭建基于 Nuxt.js SSR 的网站 创建自己的首页 - 毕业Pro - 专业程序设计代做 CS代做 作业代做</title>
+<title>Tag: python - 毕业Pro - 专业程序设计代做 CS代做 作业代做</title>
 
 
-    <meta name="description" content="本节将详细描述如何编写前后端代码">
-<meta property="og:type" content="article">
-<meta property="og:title" content="[ 4 ] 手把手搭建基于 Nuxt.js SSR 的网站 创建自己的首页">
-<meta property="og:url" content="https://blog.biye.pro/front-end/nuxtjs%E6%95%99%E7%A8%8B/4-%E6%89%8B%E6%8A%8A%E6%89%8B%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8E-Nuxt-js-SSR-%E7%9A%84%E7%BD%91%E7%AB%99-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A6%96%E9%A1%B5/index.html">
+    <meta name="description" content="javascript, python, back-end, node.js, data mining, machine learning">
+<meta property="og:type" content="website">
+<meta property="og:title" content="毕业Pro - 专业程序设计代做 CS代做 作业代做">
+<meta property="og:url" content="https://blog.biye.pro/tags/python/index.html">
 <meta property="og:site_name" content="毕业Pro - 专业程序设计代做 CS代做 作业代做">
-<meta property="og:description" content="本节将详细描述如何编写前后端代码">
+<meta property="og:description" content="javascript, python, back-end, node.js, data mining, machine learning">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://blog.biye.pro/images/og_image.png">
-<meta property="article:published_time" content="2020-03-05T11:06:49.000Z">
-<meta property="article:modified_time" content="2020-03-24T02:59:58.129Z">
 <meta property="article:author" content="碧野">
-<meta property="article:tag" content="vue">
-<meta property="article:tag" content="javascript">
-<meta property="article:tag" content="nuxtjs">
-<meta property="article:tag" content="ssr">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog.biye.pro/images/og_image.png">
 
@@ -84,7 +78,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="[ 4 ] 手把手搭建基于 Nuxt.js SSR 的网站 创建自己的首页" height="28">
+                <img src="/images/logo.svg" alt="毕业Pro - 专业程序设计代做 CS代做 作业代做" height="28">
             
             </a>
         </div>
@@ -125,7 +119,22 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">Tags</a></li>
+            <li class="is-active"><a href="#" aria-current="page">python</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    
+
+
+    
+    
 <div class="card">
     
     <div class="card-content article ">
@@ -133,17 +142,17 @@
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
                 
-                <time class="level-item has-text-grey" datetime="2020-03-05T11:06:49.000Z">2020-03-05</time>
+                <time class="level-item has-text-grey" datetime="2020-05-14T12:45:24.000Z">2020-05-14</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/front-end/">front-end</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/front-end/nuxtjs%E6%95%99%E7%A8%8B/">nuxtjs教程</a>
+                <a class="has-link-grey -link" href="/categories/python/">python</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 minutes read (About 405 words)
+                    12 minutes read (About 1774 words)
                 </span>
                 
                 
@@ -152,42 +161,99 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                [ 4 ] 手把手搭建基于 Nuxt.js SSR 的网站 创建自己的首页
+                <a class="has-link-black-ter" href="/python/%E7%BA%AF%E7%BA%AF%E5%B0%8F%E7%99%BD%E5%90%91-Windows%E4%B8%8B%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEPython%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">纯纯小白向 Windows下如何配置Python开发环境</a>
             
         </h1>
         <div class="content">
-            <p>本节将详细描述如何编写前后端代码</p>
-<h1 id="安装-nuxt-http-模块"><a href="#安装-nuxt-http-模块" class="headerlink" title="安装 @nuxt/http 模块"></a>安装 <a href="https://http.nuxtjs.org/">@nuxt/http</a> 模块</h1><ol>
-<li><p>首先进行安装，@nuxt/http 是官方网站所使用的请求模块，基于 <a href="https://github.com/sindresorhus/ky">ky</a> 模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @nuxt/http</span><br></pre></td></tr></table></figure>
+            <h2 id="Python-版本介绍"><a href="#Python-版本介绍" class="headerlink" title="Python 版本介绍"></a>Python 版本介绍</h2><p>目前来说，Python主要分为2.7和3+两个版本，部分老版本的程序可能需要Python 2.7运行，但是现在新的库一般都是支持3的。<br>本答案只介绍3有关的环境配置。</p>
+<p>如果你是这样的：</p>
+<ol>
+<li><strong>Windows</strong> 下的 <strong>Python 3+</strong> 的用户</li>
+<li><strong>我什么都不知道</strong></li>
+</ol>
+<p>那只看这一篇就够啦～let’s go!面向纯纯小白的<strong>最简单不走弯路啥也不知道反正跟着快乐就完事了方案</strong>就在这里！</p>
+<h2 id="Python-程序下载"><a href="#Python-程序下载" class="headerlink" title="Python 程序下载"></a>Python 程序下载</h2><ol>
+<li><p>点击进入下载页面: <a href="https://www.python.org/downloads/windows/">Windows 版本下载地址</a><br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges03exti1j31uw0oktej.jpg" alt=""></p>
 </li>
-<li><p>配置 <code>nuxt.config.js</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">modules: [</span><br><span class="line">  <span class="string">'@nuxt/http'</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-
+<li><p>滚动到下载页面最下面，选择圈出的文件进行下载<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0a30idcj31va0ssguc.jpg" alt=""></p>
 </li>
 </ol>
-<h1 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h1><p>把 <code>pages/index.vue</code> 的内容修改为如下代码，运行 <code>yarn dev</code> 查看结果</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>标题1<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line">  asyncData (context) &#123;</span><br><span class="line"><span class="javascript">    <span class="built_in">console</span>.dir(context)</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><ol>
+<li><p>打开下载回来的文件，开始安装，记得<strong>选上Add Python 3.8 to PATH，这样才能在cmd命令提示符运行Python程序哦！切记！</strong><br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0g6w5nqj311i0nidl0.jpg" alt=""></p>
+</li>
+<li><p>点击<em>Install Now</em>，就可以安安静静等待安装完成啦！<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0ljfalxj311a0n4n1x.jpg" alt=""></p>
+</li>
+</ol>
+<h2 id="康康有没有安装成功？"><a href="#康康有没有安装成功？" class="headerlink" title="康康有没有安装成功？"></a>康康有没有安装成功？</h2><ol>
+<li><p>点击左下角到<em>开始菜单</em>，一般来说会显示最新安装的Python程序，但是这还不够，我们需要验证<em>命令提示符</em>下是否安装成功<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0pdul4fj30u00vr1kx.jpg" alt=""></p>
+</li>
+<li><p>在开始菜单输入<strong>cmd</strong>，看到如图所示的<em>命令提示符</em>之后，按回车打开<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0qvd1pnj31140u0nih.jpg" alt=""></p>
+</li>
+<li><p>打开之后，会出现下面这样的窗口，不用害怕这个黑乎乎的东西！输入<code>python -V</code>康康有没有反应！如果安装成功的话，这里会提示<code>Python X.X.X</code>这样的信息，如果不是则说明安装失败<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0wa4szoj310q0lsjt3.jpg" alt=""></p>
+</li>
+<li><p>验证<code>pip</code>是否已经安装，输入<code>pip -V</code>，如果提示了类似下面的信息，则说明安装成功！<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges0zu37v7j310q0li76a.jpg" alt=""></p>
+</li>
+</ol>
+<p>到此为止，最最最基本的环境已经安装完成啦～撒花～🎉</p>
+<h2 id="安装基本的开发工具"><a href="#安装基本的开发工具" class="headerlink" title="安装基本的开发工具"></a>安装基本的开发工具</h2><p>虽然说这些没有安装也不影响用Python，但是，这些真的是特别特别特别方便小白的！想当年如果我知道这些东西该少走多少弯路！为了不让其他小白也被折磨，我在这里都给大家说！</p>
+<h3 id="安装pipenv虚拟环境管理器"><a href="#安装pipenv虚拟环境管理器" class="headerlink" title="安装pipenv虚拟环境管理器"></a>安装<em>pipenv</em>虚拟环境管理器</h3><p><em>pipenv</em>是一个用于管理虚拟环境的集成工具，过去我们用pip安装包的时候，都是安装到全局，这样子的话不方便管理，特别是碰到不同的程序需要不同的版本的包的时候，就会引起冲突，因此有了pipenv，可以让我们针对每个Python程序都有一个独立的环境，总之就是，简单！干净！强推！</p>
+<ol>
+<li><p>接着在上面打开的<em>cmd</em>窗口输入命令<code>python -m pip install pipenv</code>，有的朋友可能安装比较慢，也可以在这条命令最后加上<code>-i https://mirrors.aliyun.com/pypi/simple</code>，这样的话就可以使用阿里提供的国内加速服务来安装啦！</p>
+</li>
+<li><p>运行之后静静等待安装完成～<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1blj045j313y0u07f9.jpg" alt=""></p>
+</li>
+</ol>
+<h3 id="安装PyCharm开发工具"><a href="#安装PyCharm开发工具" class="headerlink" title="安装PyCharm开发工具"></a>安装<em>PyCharm</em>开发工具</h3><p>PyCharm是由一家名为JetBrains的捷克软件开发公司制作的，是一款特别好用、智能的集成开发环境（IDE），非常非常适合小白使用，利于规避初学者可能犯的很多错误！不要跟我说什么自带的编辑器就够用了，小白碰到错误的时候都不知道哪里错了好吗？！有简单好用的工具为什么不用？</p>
+<ol>
+<li><p>打开<a href="https://www.jetbrains.com/pycharm/download/#section=windows">下载页面</a>，一般选择这个免费的Community版本就可以了<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1jbgghhj31rq0u0wlp.jpg" alt=""></p>
+</li>
+<li><p>打开下载回来的安装文件，一路回车安装就可以<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1js65wvj30rq0kkdi0.jpg" alt=""></p>
+</li>
+</ol>
+<h2 id="开始创建新项目"><a href="#开始创建新项目" class="headerlink" title="开始创建新项目"></a>开始创建新项目</h2><ol>
+<li><p>打开刚刚安装的<em>PyCharm</em>，选择<em>Create New Project</em>创建新项目<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1rodflfj31160rago7.jpg" alt=""></p>
+</li>
+<li><p>填写项目基本信息，完成后点击下面的<em>Create</em>按钮<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1uvsqu4j31120ra0wf.jpg" alt=""></p>
+</li>
+<li><p>PyCharm开始创建项目，稍等即可<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1wocw4ej31fq0u00w9.jpg" alt=""></p>
+</li>
+<li><p>打开后，可以看到项目的根目录创建了一个<em>Pipfile</em>文件，这个文件很重要，里面记录了这个项目使用的Python的版本和需要用的库，不能删除！<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges1xv8en9j31ce0ou41r.jpg" alt=""></p>
+</li>
+</ol>
+<h2 id="创建一个Python文件试试看"><a href="#创建一个Python文件试试看" class="headerlink" title="创建一个Python文件试试看"></a>创建一个Python文件试试看</h2><ol>
+<li><p>右键点击项目名称，如图所示，创建一个Python文件<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges24bcds9j317t0u0tdp.jpg" alt=""></p>
+</li>
+<li><p>输入文件名，按回车，然后打开该文件<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges254pzunj30ja08e74q.jpg" alt=""></p>
+</li>
+<li><p>输入代码</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(&#39;知乎 爱写程序的小哥哥&#39;)</span><br></pre></td></tr></table></figure>
+<p> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges28gm09xj31bf0u0q8d.jpg" alt=""></p>
+</li>
+<li><p>（可选，强烈建议）修改代码文件的换行符为<em>LF - Unix and macOS (\n)</em>，这样在和使用Linux和Mac的同学交换文件的时候，具有更好的兼容性，否则可能造成一些报错提示哦<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges297ro82j30eu05yjrs.jpg" alt=""></p>
+</li>
+<li><p>右键点击编辑区域，在快捷菜单里点击<em>Run ‘run’</em>，即可运行当前Python程序了！是不是很激动！<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges2c33lhlj30u00vp778.jpg" alt=""></p>
+</li>
+</ol>
+<h2 id="安装库的方法"><a href="#安装库的方法" class="headerlink" title="安装库的方法"></a>安装库的方法</h2><ol>
+<li><p>打开PyCharm内置的命令提示符，它会自动切换到当前的项目目录，很方便<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges2henr4bj30u00witdi.jpg" alt=""></p>
+</li>
+<li><p>假设我们需要安装<em>requests</em>库，则输入<code>pipenv install requests</code><br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges2j0qzguj311k0bm401.jpg" alt=""></p>
+</li>
+<li><p>安装完成之后，可以康康<em>Pipfile</em>文件，可以发现多了一行，也就是刚刚安装的库<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges2okilnaj30h60hsta8.jpg" alt=""></p>
+</li>
+</ol>
+<h2 id="（可选）安装-JupyterLab"><a href="#（可选）安装-JupyterLab" class="headerlink" title="（可选）安装 JupyterLab"></a>（可选）安装 JupyterLab</h2><p>JupyterLab的鼎鼎大名很多朋友都知道，在此演示如何安装</p>
+<ol>
+<li><p>首先在PyCharm的命令提示符内运行<code>pipenv install jupyterlab</code>安装本体<br> <img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ges2smyykoj30s609a0u2.jpg" alt=""></p>
+</li>
+<li><p>运行<code>pipenv install ipykernel</code>安装内核管理工具（为了保证JupyterLab可以引用当前虚拟环境所安装的包）</p>
+</li>
+<li><p>运行<code>python -m ipykernel install --user --name=my-virtualenv-name</code>创建内核</p>
+</li>
+<li><p>运行<code>jupyter lab</code>启动 JupyterLab</p>
+</li>
+</ol>
 
-<p>可以注意到，以上代码包含了一个 Vue 中没有的方法 <code>asyncData</code>，这是 Nuxt 特有的方法，<strong>用来在服务端和客户端执行网络请求代码</strong>。</p>
-<p>我们发现，这里的日志打印到了本地的终端里，而不是浏览器的 <code>Console</code>，这是因为当前页面在浏览器中输入网址打开后，这里的 <code>asyncData</code> 方法是在服务端执行的。</p>
-<p>观察打印的结果，我们可以看到，这里的 <code>context</code> 包含了 <code>isDev</code>、<code>error</code>、<code>env</code>、<code>req</code>、<code>res</code>、<code>route</code>、<code>params</code>、<code>query</code>等属性，在编写代码时会经常用到。</p>
-<p>下面我们来修改页面代码，访问网络上的公用 API 来测试一下。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>标题1<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-for</span>=<span class="string">"post in postList"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">:key</span>=<span class="string">"post.id"</span></span></span><br><span class="line"><span class="tag">      &gt;</span></span><br><span class="line">        &#123;&#123; post.title &#125;&#125;</span><br><span class="line">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="javascript">  <span class="keyword">async</span> asyncData (context) &#123;</span></span><br><span class="line"><span class="actionscript">  <span class="comment">// async asyncData (&#123; $http &#125;) &#123;</span></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// $http 可以利用 ES6 的 Object Destructing，在参数里进行解包获取</span></span></span><br><span class="line"><span class="actionscript">    <span class="keyword">const</span> url = <span class="string">'http://jsonplaceholder.typicode.com/posts'</span></span></span><br><span class="line"><span class="actionscript">    <span class="comment">// const response = await $http.$get(url)</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">const</span> response = <span class="keyword">await</span> context.$http.$<span class="keyword">get</span>(url)</span></span><br><span class="line"><span class="actionscript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="actionscript">      <span class="comment">// 这里的 postList 会被融合到 this.data 中</span></span></span><br><span class="line">      postList: response</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>结果如图所示，此时已经完成了最基本的 SSR 网站。</p>
-<img src="/front-end/nuxtjs%E6%95%99%E7%A8%8B/4-%E6%89%8B%E6%8A%8A%E6%89%8B%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8E-Nuxt-js-SSR-%E7%9A%84%E7%BD%91%E7%AB%99-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A6%96%E9%A1%B5/1.png" class="">
-
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/javascript/" rel="tag">javascript</a>, <a class="has-link-grey -link" href="/tags/nuxtjs/" rel="tag">nuxtjs</a>, <a class="has-link-grey -link" href="/tags/ssr/" rel="tag">ssr</a>, <a class="has-link-grey -link" href="/tags/vue/" rel="tag">vue</a>
-                </div>
-            </div>
         </div>
         
         
@@ -199,52 +265,11 @@
 
 
 
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/front-end/nuxtjs%E6%95%99%E7%A8%8B/5-%E6%89%8B%E6%8A%8A%E6%89%8B%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8E-Nuxt-js-SSR-%E7%9A%84%E7%BD%91%E7%AB%99-%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">[ 5 ] 手把手搭建基于 Nuxt.js SSR 的网站 如何创建前端路由</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/hardware/%E5%A6%82%E4%BD%95%E7%BC%93%E8%A7%A3%E9%BB%91%E8%8B%B9%E6%9E%9C%E5%87%BA%E7%8E%B0%E8%89%B2%E5%BD%A9%E6%96%AD%E5%B1%82-color-banding-%E9%97%AE%E9%A2%98/">
-                <span class="level-item">如何缓解黑苹果出现色彩断层(color banding)问题</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
-    </div>
-</div>
 
 
 
-<div class="card">
-    <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
-        
-<script>
-    var disqus_config = function () {
-        this.page.url = 'https://blog.biye.pro/front-end/nuxtjs%E6%95%99%E7%A8%8B/4-%E6%89%8B%E6%8A%8A%E6%89%8B%E6%90%AD%E5%BB%BA%E5%9F%BA%E4%BA%8E-Nuxt-js-SSR-%E7%9A%84%E7%BD%91%E7%AB%99-%E5%88%9B%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A6%96%E9%A1%B5/';
-        this.page.identifier = '4';
-    };
-    (function() {
-        var d = document, s = d.createElement('script');  
-        s.src = '//' + 'biyepro' + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-
-<div id="disqus_thread">
     
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-    </div>
-</div>
+
 
 </div>
                 
@@ -494,7 +519,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="[ 4 ] 手把手搭建基于 Nuxt.js SSR 的网站 创建自己的首页" height="28">
+                    <img src="/images/logo.svg" alt="毕业Pro - 专业程序设计代做 CS代做 作业代做" height="28">
                 
                 </a>
                 <p class="is-size-7">
