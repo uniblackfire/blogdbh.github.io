@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.biye.pro/python/Python-%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E4%B8%80%E6%8A%8A%E6%A2%AD%EF%BC%88%E9%95%BF%E6%9C%9F%E6%9B%B4%E6%96%B0%EF%BC%89/</loc>
+    
+    <lastmod>2020-06-21T13:02:45.400Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.biye.pro/other/%E5%85%A8%E7%BD%91%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88/</loc>
     
     <lastmod>2020-06-08T14:24:09.084Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://blog.biye.pro/other/%E7%AE%A1%E7%90%86%E5%AD%A6%E4%B9%A0%E8%BF%9B%E5%BA%A6/</loc>
     
     <lastmod>2020-06-08T13:56:44.098Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.biye.pro/python/Python-%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E4%B8%80%E6%8A%8A%E6%A2%AD%EF%BC%88%E9%95%BF%E6%9C%9F%E6%9B%B4%E6%96%B0%EF%BC%89/</loc>
-    
-    <lastmod>2020-06-02T15:20:33.205Z</lastmod>
     
   </url>
   
