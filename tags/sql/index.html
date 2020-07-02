@@ -161,99 +161,17 @@
             
         </h1>
         <div class="content">
-            <h1 id="数据库基本知识"><a href="#数据库基本知识" class="headerlink" title="数据库基本知识"></a>数据库基本知识</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="数据库术语"><a href="#数据库术语" class="headerlink" title="数据库术语"></a>数据库术语</h3><ul>
-<li>数据库（database）：保存有组织的数据的容器。</li>
-<li>数据表（table）：某种特定类型数据的结构化清单。</li>
-<li>模式（schema）：数据库对象的集合，这个集合包含了各种对象如：表、视图、存储过程、索引等。</li>
-<li>列（column）：表中的一个字段，一个数据表由一个或者多个列组成。</li>
-<li>行（row）：数据表中的一行数据记录。</li>
-<li>主键（primary key）：一列或者一组列，其值能否唯一标识数据表中的一行。</li>
-</ul>
-<h3 id="SQL语法"><a href="#SQL语法" class="headerlink" title="SQL语法"></a>SQL语法</h3><ul>
-<li>SQL 指结构化查询语言</li>
-<li>SQL 使我们有能力访问数据库</li>
-<li>SQL 是一种 ANSI 的标准计算机语言</li>
-</ul>
-<h4 id="SQL语法结构包"><a href="#SQL语法结构包" class="headerlink" title="SQL语法结构包"></a>SQL语法结构包</h4><ul>
-<li>字句：是语句和查询的组成成分。</li>
-<li>表达式：可以产生任何标量值，或由列和行的数据库表。</li>
-<li>谓词：给需要评估的SQL三值逻辑（3VL）（true/false/unknown）或布尔真值指定条件，并限制语句和查询效果，或改变程序流程。</li>
-<li>查询：基于特定的条件检索数据。</li>
-<li>语句：可以持久地影响纲要和数据，也可以控制数据库事务，程序流程，连接，会话或诊断。</li>
-</ul>
-<h4 id="SQL语法要点"><a href="#SQL语法要点" class="headerlink" title="SQL语法要点"></a>SQL语法要点</h4><ul>
-<li>SQL语句不区分大小写，但是数据库表名，列名和值是否区分，依赖于具体的DBMS以及配置。</li>
-<li>多条SQL语句必须以分好（；）分隔。</li>
-<li>处理SQL语句时，所有空格都被忽略；SQL语句可以写成一行，也可以分写为多行。</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 一行 SQL 语句</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">user</span> <span class="keyword">SET</span> username=<span class="string">'biyeyi'</span>, <span class="keyword">password</span>=<span class="string">'biyeyi'</span> <span class="keyword">WHERE</span> username = <span class="string">'root'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 多行 SQL 语句</span></span><br><span class="line"><span class="keyword">UPDATE</span> <span class="keyword">user</span></span><br><span class="line"><span class="keyword">SET</span> username=<span class="string">'biyeyi'</span>, <span class="keyword">password</span>=<span class="string">'biyeyi'</span></span><br><span class="line"><span class="keyword">WHERE</span> username = <span class="string">'root'</span>;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>SQL支持三种注释</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 注释1</span></span><br><span class="line"><span class="comment">-- 注释2</span></span><br><span class="line"><span class="comment">/* 注释3 */</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="SQL分类"><a href="#SQL分类" class="headerlink" title="SQL分类"></a>SQL分类</h3><h4 id="数据定义语言（DDL）"><a href="#数据定义语言（DDL）" class="headerlink" title="数据定义语言（DDL）"></a>数据定义语言（DDL）</h4><p>数据定义语言（Data Definition Language，DDL）是 SQL 语言集中负责数据结构定义与数据库对象定义的语言。</p>
-<p>DDL 的主要功能是<strong>定义数据库对象</strong>。</p>
-<p>DDL 的核心指令是 <code>CREATE</code>、<code>ALTER</code>、<code>DROP</code>。</p>
-<h4 id="数据操纵语言（DML）"><a href="#数据操纵语言（DML）" class="headerlink" title="数据操纵语言（DML）"></a>数据操纵语言（DML）</h4><p>数据操纵语言（Data Manipulation Language, DML）是用于数据库操作，对数据库其中的对象和数据运行访问工作的编程语句。</p>
-<p>DML 的主要功能是 <strong>访问数据</strong>，因此其语法都是以<strong>读写数据库</strong>为主。</p>
-<p>DML 的核心指令是 <code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>、<code>SELECT</code>。这四个指令合称 CRUD（Create, Read, Update, Delete），即增删改查。</p>
-<h4 id="事务控制语言（TCL）"><a href="#事务控制语言（TCL）" class="headerlink" title="事务控制语言（TCL）"></a>事务控制语言（TCL）</h4><p>事务控制语言 (Transaction Control Language, TCL) 用于<strong>管理数据库中的事务</strong>。这些用于管理由 DML 语句所做的更改。它还允许将语句分组为逻辑事务。</p>
-<p>TCL 的核心指令是 <code>COMMIT</code>、<code>ROLLBACK</code>。</p>
-<h4 id="数据控制语言（DCL）"><a href="#数据控制语言（DCL）" class="headerlink" title="数据控制语言（DCL）"></a>数据控制语言（DCL）</h4><p>数据控制语言 (Data Control Language, DCL) 是一种可对数据访问权进行控制的指令，它可以控制特定用户账户对数据表、查看表、预存程序、用户自定义函数等数据库对象的控制权。</p>
-<p>DCL 的核心指令是 <code>GRANT</code>、<code>REVOKE</code>。</p>
-<p>DCL 以<strong>控制用户的访问权限</strong>为主，因此其指令作法并不复杂，可利用 DCL 控制的权限有：<code>CONNECT</code>、<code>SELECT</code>、<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>、<code>EXECUTE</code>、<code>USAGE</code>、<code>REFERENCES</code>。</p>
-<p>根据不同的 DBMS 以及不同的安全性实体，其支持的权限控制也有所不同。</p>
-<p>（以下为 DML 语句用法）</p>
-<h2 id="增删改查"><a href="#增删改查" class="headerlink" title="增删改查"></a>增删改查</h2><blockquote>
-<p>增删改查，又称为 CRUD，数据库基本操作中的基本操作。</p>
-</blockquote>
-<h3 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h3><p><strong>插入完整的行</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- INSERT INTO 语句用于向表中插入新记录。</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">user</span> <span class="keyword">VALUES</span> (<span class="number">10</span>, <span class="string">'root'</span>, <span class="string">'root'</span>, <span class="string">'xxxx@163.com'</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>插入行的一部分</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">user</span>(username, <span class="keyword">password</span>, email) <span class="keyword">VALUES</span> (<span class="string">'admin'</span>, <span class="string">'admin'</span>, <span class="string">'xxxx@163.com'</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>插入查询出来的数据</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">user</span>(username) <span class="keyword">SELECT</span> <span class="keyword">name</span> <span class="keyword">FROM</span> <span class="keyword">account</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- UPDATE 语句用于更新表中的记录。</span></span><br><span class="line"><span class="keyword">UPDATE</span> userSET username=<span class="string">'biyeyi'</span>, <span class="keyword">password</span>=<span class="string">'biyeyi'</span> <span class="keyword">WHERE</span> username = <span class="string">'root'</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><blockquote>
-<ul>
-<li><code>DELETE</code> 语句用于删除表中的记录。</li>
-<li><code>TRUNCATE TABLE</code> 可以清空表，也就是删除所有行。</li>
-</ul>
-</blockquote>
-<p><strong>删除表中的指定数据</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> username = <span class="string">'biyeyi'</span>;</span><br></pre></td></tr></table></figure>
-
-<p><strong>清空表中的数据</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">TRUNCATE</span> <span class="keyword">TABLE</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="查询数据"><a href="#查询数据" class="headerlink" title="查询数据"></a>查询数据</h3><ul>
-<li><code>SELECT</code> 语句用于从数据库中查询数据。</li>
-<li><code>DISTINCT</code> 用于返回唯一不同的值。它作用于所有列，也就是说所有列的值都相同才算相同。</li>
-<li><code>LIMIT</code> 限制返回的行数。可以有两个参数，第一个参数为起始行，从 0 开始；第二个参数为返回的总行数。</li>
-</ul>
-<p><strong>查询单列</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> prod_name <span class="keyword">FROM</span> products;</span><br></pre></td></tr></table></figure>
-
-<p><strong>查询多列</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> prod_id, prod_name, prod_price <span class="keyword">FROM</span> products;</span><br></pre></td></tr></table></figure>
-
-<p><strong>查询所有列</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> products;</span><br></pre></td></tr></table></figure>
-
-<p><strong>查询不同的值</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> vend_id <span class="keyword">FROM</span> products;</span><br></pre></td></tr></table></figure>
-
-<p><strong>限制查询结果</strong></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 返回前 5 行</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mytable <span class="keyword">LIMIT</span> <span class="number">5</span>;</span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mytable <span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">5</span>;</span><br><span class="line"><span class="comment">-- 返回第 3 ~ 5 行</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> mytable <span class="keyword">LIMIT</span> <span class="number">2</span>, <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
-
+            包括SQL的基本概念和语法介绍。
         </div>
         
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/front-end/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/#more">Read More</a>
+                </div>
+            </div>
+        </div>
         
         
     </div>
