@@ -138,6 +138,99 @@
 
     
 
+    
+
+
+    
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                
+                <time class="level-item has-text-grey" datetime="2020-06-21T13:16:07.000Z">2020-06-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 minutes read (About 2380 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/python/%E5%85%A8%E7%BD%91%E6%96%B0%E9%97%BB%E5%85%A8%E7%9F%A5%E9%81%93%E4%B9%8B%E5%88%A9%E7%94%A8Python-AsyncIO%E6%8A%93%E5%8F%96%E7%99%BE%E5%BA%A6%E6%96%B0%E9%97%BB/">全网新闻全知道之利用 Python AsyncIO 抓取百度新闻</a>
+            
+        </h1>
+        <div class="content">
+            <p>网络上关于Python的异步相关的文章已经很多了，但是成体系地完整抓取的教程还是比较少的，正好最近做了百度新闻的爬虫，正好借此机会实践了 Python 的 AsyncIO，利用异步进行爬虫的编写，提高爬取速度。</p>
+<p>本文所有代码基于 Python 3.8 编写，低版本可能在API上有所区别，在此请注意。</p>
+<h2 id="什么是异步-Async"><a href="#什么是异步-Async" class="headerlink" title="什么是异步 Async"></a>什么是异步 Async</h2><p>所谓异步，是相对于同步来说的。正常情况下，程序是一行一行运行的，如果一行代码运行耗时很久，就会一直卡在当前位置。这样的行为对于计算密集型程序（如计算数据）是没有问题的，毕竟CPU一直在运算。但是对于IO密集型程序（如爬虫），大量时间被消耗在等待缓慢的IO设备上（如网络请求、数据库操作等），CPU在等待期间什么事也没做，浪费了算力。这样当然是不可以接受的。</p>
+<p>在过去，Python语言中实现IO高并发，通常是通过多线程或者多进程来实现的，但是由于相关编程的难度和容易出错等问题，导致并不能快速地编写出可用的程序。</p>
+<p>用过JavaScript语言的同学肯定知道，JS也是单线程的，但是JS通过回调、Promise、async/await等实现了异步操作，运行IO密集型程序的效率很高。</p>
+<p>在Python最近的几个版本中，实现了一种称为AsyncIO的库，和JS一样使用了 <code>async/await</code> 关键字来标明异步操作，将异步代码的写法向同步代码靠近，便于理解。</p>
+<h2 id="Python语言如何实现-IO-高并发？"><a href="#Python语言如何实现-IO-高并发？" class="headerlink" title="Python语言如何实现 IO 高并发？"></a>Python语言如何实现 IO 高并发？</h2><p>Python 实现异步的方法和 JS 类似，都采用了一种称为事件循环(event loop)的模型，将任务放进这个模型中，会自动在CPU可用时执行任务，并在任务完成时进行回调，然后继续执行下一个任务，CPU就可用一直处于工作状态，而不是经常性地等待IO的返回结果。</p>
+<p>在 Python 中，我们可以把<code>async</code>关键字加在函数的<code>def</code>关键字之前，声明一个异步函数，也称之为协程（coroutine），可以理解为<code>&quot;可以放进事件循环的任务&quot;</code>。</p>
+<h2 id="构建百度新闻爬虫程序的基本框架"><a href="#构建百度新闻爬虫程序的基本框架" class="headerlink" title="构建百度新闻爬虫程序的基本框架"></a>构建百度新闻爬虫程序的基本框架</h2><p>以下是本文编写的程序的基本框架</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> aiohttp</span><br><span class="line"><span class="keyword">import</span> uvloop</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置uvloop，提高运行速度</span></span><br><span class="line">asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BaiduNewsCrawler</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">loop_crawl</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(<span class="string">'start'</span>)</span><br><span class="line">        <span class="keyword">await</span> asyncio.sleep(<span class="number">3</span>)</span><br><span class="line">        print(<span class="string">'end'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="comment"># 启动异步程序</span></span><br><span class="line">            asyncio.run(self.loop_crawl())</span><br><span class="line">        <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">            print(<span class="string">'stopped by yourself!'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    c = BaiduNewsCrawler()</span><br><span class="line">    c.run()</span><br></pre></td></tr></table></figure>
+
+<h2 id="程序主要功能介绍"><a href="#程序主要功能介绍" class="headerlink" title="程序主要功能介绍"></a>程序主要功能介绍</h2><h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><p>本程序基于公司名称，搜索该公司的相关新闻并进行爬取，就此设计了数据库，代码如下</p>
+<p>本文设计了两个表，一个是<code>company</code>表，存储公司的信息和状态，另外一个是<code>news</code>表，保存跟公司相关的新闻的信息，两个表通过<code>company_id</code>进行关联。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@staticmethod</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_db</span><span class="params">()</span>:</span></span><br><span class="line">    db = sqlite3.connect(<span class="string">'stock.db'</span>)</span><br><span class="line">    cursor = db.cursor()</span><br><span class="line"></span><br><span class="line">    cursor.execute(</span><br><span class="line">        <span class="string">"CREATE TABLE IF NOT EXISTS company (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(50), code VARCHAR(20), current_pn INTEGER, status INTEGER);"</span>)</span><br><span class="line">    cursor.execute(</span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        CREATE TABLE IF NOT EXISTS news (</span></span><br><span class="line"><span class="string">          id INTEGER PRIMARY KEY AUTOINCREMENT, </span></span><br><span class="line"><span class="string">          company_id INTEGER, </span></span><br><span class="line"><span class="string">          title VARCHAR(500), </span></span><br><span class="line"><span class="string">          posttime VARCHAR(50), </span></span><br><span class="line"><span class="string">          news_ts INTEGER, </span></span><br><span class="line"><span class="string">          subsitename VARCHAR(50), </span></span><br><span class="line"><span class="string">          url VARCHAR(600) unique, </span></span><br><span class="line"><span class="string">          baidu_json TEXT, </span></span><br><span class="line"><span class="string">          html_lzma BLOB, </span></span><br><span class="line"><span class="string">          status INTEGER, </span></span><br><span class="line"><span class="string">          created_ts INTEGER, </span></span><br><span class="line"><span class="string">          CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES company(id)</span></span><br><span class="line"><span class="string">        );</span></span><br><span class="line"><span class="string">        """</span>)</span><br><span class="line">    db.commit()</span><br><span class="line">    <span class="keyword">return</span> db, cursor</span><br></pre></td></tr></table></figure>
+
+<h3 id="百度新闻爬虫逻辑"><a href="#百度新闻爬虫逻辑" class="headerlink" title="百度新闻爬虫逻辑"></a>百度新闻爬虫逻辑</h3><h4 id="查询数据库，遍历公司名称"><a href="#查询数据库，遍历公司名称" class="headerlink" title="查询数据库，遍历公司名称"></a>查询数据库，遍历公司名称</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">loop_crawl</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.session = aiohttp.ClientSession()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># 这里的 _workers_max 控制了同时请求的数量</span></span><br><span class="line">        self.cursor.execute(<span class="string">'select * from company where status=1 limit ?'</span>, (self._workers_max,))</span><br><span class="line">        company_records = self.cursor.fetchall()</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> len(company_records):</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        task_list = []</span><br><span class="line">        <span class="keyword">for</span> rec <span class="keyword">in</span> company_records:</span><br><span class="line">            self.logger.info(<span class="string">f'crawl <span class="subst">&#123;rec[<span class="number">1</span>]&#125;</span> pn: <span class="subst">&#123;rec[<span class="number">3</span>]&#125;</span>'</span>)</span><br><span class="line">            <span class="comment"># 生成任务列表</span></span><br><span class="line">            task = asyncio.create_task(self.crawl(rec))</span><br><span class="line">            task_list.append(task)</span><br><span class="line">        <span class="comment"># 运行当前的任务列表</span></span><br><span class="line">        <span class="keyword">await</span> asyncio.wait(task_list)</span><br><span class="line">    <span class="keyword">await</span> self.session.close()</span><br></pre></td></tr></table></figure>
+
+<h4 id="具体分析网络请求"><a href="#具体分析网络请求" class="headerlink" title="具体分析网络请求"></a>具体分析网络请求</h4><p>我们都知道，在Chrome浏览器里打开<code>开发者工具</code>的<code>网络</code>板块，可以看到请求的情况，我们可以在需要模拟的请求上点击右键，然后选择<code>Copy</code>，再选择<code>Copy as cURL</code>，这时候请求的详情会被复制为一条<code>curl</code>命令。</p>
+<p><a href="https://curl.trillworks.com/">点此打开 Convert cURL</a> 在此介绍一个非常好用的工具。这个工具的功能就是把<code>curl</code>命令转换为程序代码，比如Python的代码，这样子就不用我们自己一行行地把请求里面的信息抄到代码里了。</p>
+<p>当然，这个工具生成的python代码是基于<code>requests</code>库的，我们需要进行一点微小的修改，使其适合<code>aiohttp</code>库使用。</p>
+<h4 id="自定义请求函数"><a href="#自定义请求函数" class="headerlink" title="自定义请求函数"></a>自定义请求函数</h4><p>这里为了进行请求重试，作者加入了<code>tenacity</code>库，可以通过装饰器<code>@retry</code>引入重试功能。</p>
+<p>同时为了每次请求的UA都不同，这里自定义了一个随机UA的小工具。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@retry(stop=stop_after_attempt(2), wait=wait_random(min=2, max=5))</span></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">fetch</span><span class="params">(session, url, params, headers, cookies, timeout=<span class="number">9</span>, to_json=False, random_ua=True)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> random_ua <span class="keyword">or</span> <span class="string">'User-Agent'</span> <span class="keyword">not</span> <span class="keyword">in</span> headers:</span><br><span class="line">        headers[<span class="string">'User-Agent'</span>] = RandomUserAgent().random</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> session.get(url, params=params, cookies=cookies, headers=headers, timeout=timeout) <span class="keyword">as</span> response:</span><br><span class="line">        status = response.status</span><br><span class="line">        <span class="keyword">if</span> to_json:</span><br><span class="line">            html = <span class="keyword">await</span> response.json()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            html = <span class="keyword">await</span> response.read()</span><br><span class="line">            encoding = response.get_encoding()</span><br><span class="line">            <span class="keyword">if</span> encoding == <span class="string">'gb2312'</span>:</span><br><span class="line">                encoding = <span class="string">'gbk'</span></span><br><span class="line">            html = html.decode(encoding, errors=<span class="string">'ignore'</span>)</span><br><span class="line">        redirected_url = str(response.url)</span><br><span class="line">    <span class="keyword">return</span> status, html, redirected_url</span><br></pre></td></tr></table></figure>
+
+<h4 id="爬取函数"><a href="#爬取函数" class="headerlink" title="爬取函数"></a>爬取函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">crawl</span><span class="params">(self, company_record)</span>:</span></span><br><span class="line">    <span class="comment"># 将全局的访问参数进行浅拷贝</span></span><br><span class="line">    p = params.copy()</span><br><span class="line">    company_id = company_record[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># 修改为当前的参数</span></span><br><span class="line">    p[<span class="string">'word'</span>] = company_record[<span class="number">1</span>]</span><br><span class="line">    current_pn = company_record[<span class="number">3</span>]</span><br><span class="line">    p[<span class="string">'pn'</span>] = str(current_pn)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># 尝试请求</span></span><br><span class="line">        status, json_resp, redirected_url = <span class="keyword">await</span> su.fetch(</span><br><span class="line">            self.session,</span><br><span class="line">            <span class="string">'https://m.baidu.com/sf/vsearch'</span>,</span><br><span class="line">            params=p,</span><br><span class="line">            headers=headers,</span><br><span class="line">            cookies=cookies,</span><br><span class="line">            to_json=<span class="literal">True</span></span><br><span class="line">        )</span><br><span class="line">    <span class="keyword">except</span> RetryError <span class="keyword">as</span> ex: <span class="comment"># 对于请求异常过多的情况，写入数据库进行记录</span></span><br><span class="line">        self.cursor.execute(<span class="string">'update company set status=0 where id = ?;'</span>, (company_id,))</span><br><span class="line">        self.db.commit()</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">else</span>: <span class="comment"># 请求正常获取数据</span></span><br><span class="line">        <span class="keyword">if</span> status == <span class="number">200</span> <span class="keyword">and</span> json_resp[<span class="string">'errno'</span>] == <span class="number">0</span>:</span><br><span class="line">            news_list = json_resp[<span class="string">'data'</span>][<span class="string">'list'</span>]</span><br><span class="line">            <span class="keyword">for</span> item <span class="keyword">in</span> news_list:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    <span class="comment"># 把当前页的新闻依次插入数据库</span></span><br><span class="line">                    self.cursor.execute(<span class="string">"""</span></span><br><span class="line"><span class="string">                    insert into news (company_id, title, posttime, subsitename, url, baidu_json, status, created_ts, news_ts)</span></span><br><span class="line"><span class="string">                    values (?, ?, ?, ?, ?, ?, ?, ?, ?)</span></span><br><span class="line"><span class="string">                    """</span>, (</span><br><span class="line">                        company_id,</span><br><span class="line">                        item[<span class="string">'title'</span>],</span><br><span class="line">                        item[<span class="string">'posttime'</span>],</span><br><span class="line">                        item[<span class="string">'subsitename'</span>],</span><br><span class="line">                        item[<span class="string">'url'</span>],</span><br><span class="line">                        json.dumps(item),</span><br><span class="line">                        <span class="number">1</span>,</span><br><span class="line">                        su.get_unix_timestamp(),</span><br><span class="line">                        su.convert_baidu_news_datetime_to_unix_ts(item[<span class="string">'posttime'</span>]),</span><br><span class="line">                    ))</span><br><span class="line">                <span class="keyword">except</span>: <span class="comment"># 对于网址有重复的情况，由于数据库已经对url字段做了unique限制，所以插入重复的url会导致报错，这里直接跳过即可</span></span><br><span class="line">                    print(item[<span class="string">'url'</span>], <span class="string">'duplicate'</span>)</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> json_resp[<span class="string">'data'</span>][<span class="string">'hasMore'</span>]: <span class="comment"># 当前公司的相关新闻已经爬取完毕，直接标记公司的状态为2，结束爬取</span></span><br><span class="line">            self.cursor.execute(<span class="string">'update company set status=2 where id = ?;'</span>, (company_id,))</span><br><span class="line">        <span class="keyword">else</span>: <span class="comment"># 翻页</span></span><br><span class="line">            self.cursor.execute(<span class="string">'update company set current_pn=? where id = ?;'</span>, (current_pn + <span class="number">10</span>, company_id))</span><br><span class="line">        self.db.commit()</span><br></pre></td></tr></table></figure>
+
+<h2 id="构建具体新闻页的爬虫"><a href="#构建具体新闻页的爬虫" class="headerlink" title="构建具体新闻页的爬虫"></a>构建具体新闻页的爬虫</h2><p>上文介绍了爬取百度新闻的代码。这部分我们来了解如何大规模爬取具体的新闻页。</p>
+<p>由于百度上得到的新闻页来自很多外部新闻网站，因此并不适用于上文的顺序爬取的方法。</p>
+<p>为了尽最大可能降低对网站的压力（也是为了防止被网址屏蔽），在此采用了URL池的做法（参考了猿人学的代码，但是进行了一些改动）将不同网站的URL分别存储，每次请求的时候尽可能访问不同的网站，避免集中访问同一个网站。</p>
+<p>首先将所有数据库里面的URL放入池中，在此没有考虑性能和内存，一股脑读了进来。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">push_to_pool</span><span class="params">(self, news)</span>:</span></span><br><span class="line">    host = urlparse(news.url).netloc</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> host <span class="keyword">or</span> <span class="string">'.'</span> <span class="keyword">not</span> <span class="keyword">in</span> host:</span><br><span class="line">        print(<span class="string">'try to push_to_pool with bad url:'</span>, news.url, <span class="string">', len of ur:'</span>, len(news.url))</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> host <span class="keyword">in</span> self.waiting:</span><br><span class="line">        <span class="keyword">if</span> news <span class="keyword">in</span> self.waiting[host]:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        self.waiting[host].add(news)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.waiting[host] = &#123;news&#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>然后开始死循环，不断提取URL</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pop</span><span class="params">(self, size)</span>:</span></span><br><span class="line">    result = []</span><br><span class="line"></span><br><span class="line">    waiting_len = len(self.waiting)</span><br><span class="line">    sample_len = min(waiting_len, size)</span><br><span class="line">    hosts = random.sample(list(self.waiting), k=sample_len)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> host <span class="keyword">in</span> hosts:</span><br><span class="line">        result.append(self.pop_by_host(host))</span><br><span class="line"></span><br><span class="line">    counter = size - waiting_len</span><br><span class="line">    <span class="keyword">while</span> counter &gt; <span class="number">0</span> <span class="keyword">and</span> len(self.waiting):</span><br><span class="line">        host = random.choice(list(self.waiting))</span><br><span class="line">        result.append(self.pop_by_host(host))</span><br><span class="line">        counter -= <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+<p>访问URL</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">crawl</span><span class="params">(self, news)</span>:</span></span><br><span class="line">    status, html, redirected_url = <span class="keyword">await</span> su.fetch_without_retry(</span><br><span class="line">        self.session,</span><br><span class="line">        news.url,</span><br><span class="line">        headers=headers,</span><br><span class="line">    )</span><br><span class="line">    self.set_status(news, status, html)</span><br></pre></td></tr></table></figure>
+
+<p>根据请求的结果写入数据库</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">set_status</span><span class="params">(self, news, status_code, html)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> news <span class="keyword">in</span> self.pending:</span><br><span class="line">        self.pending.pop(news)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="comment"># 正常情况，把html压缩后存入数据库</span></span><br><span class="line">        html_lzma = lzma.compress(html)</span><br><span class="line">        self.cursor.execute(<span class="string">'update news set status=2, html_lzma=? where id = ?;'</span>, (html_lzma, news.id,))</span><br><span class="line">    <span class="keyword">elif</span> status_code == <span class="number">404</span>:</span><br><span class="line">        self.cursor.execute(<span class="string">'update news set status=0 where id = ?;'</span>, (news.id,))</span><br><span class="line">    <span class="keyword">elif</span> news <span class="keyword">in</span> self.failure:</span><br><span class="line">        self.failure[news] += <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> self.failure[news] &gt; self.failure_threshold:</span><br><span class="line">            self.cursor.execute(<span class="string">'update news set status=0 where id = ?;'</span>, (news.id,))</span><br><span class="line">            self.failure.pop(news)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.add(news)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.failure[news] = <span class="number">1</span></span><br><span class="line">        self.add(news)</span><br><span class="line">    self.db.commit()</span><br></pre></td></tr></table></figure>
+
+<p>本文首发于<a href="https://biye.pro/project/67/%E5%85%A8%E7%BD%91%E6%96%B0%E9%97%BB%E5%85%A8%E7%9F%A5%E9%81%93%E4%B9%8B%E5%88%A9%E7%94%A8-python-asyncio-%E6%8A%93%E5%8F%96%E7%99%BE%E5%BA%A6%E6%96%B0%E9%97%BB">毕业pro官网</a></p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
 
     
     
@@ -483,7 +576,7 @@
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            25
+                            27
                         </p>
                     </a>
                 </div>
@@ -507,7 +600,7 @@
                     </p>
                     <a href="/tags">
                         <p class="title has-text-weight-normal">
-                            21
+                            22
                         </p>
                     </a>
                 </div>
@@ -591,7 +684,7 @@
                 <span class="level-item">python</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li>
             </ul>
@@ -604,7 +697,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/apple/" style="font-size: 11.67px;">apple</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/charles/" style="font-size: 11.67px;">charles</a> <a href="/tags/chrome/" style="font-size: 11.67px;">chrome</a> <a href="/tags/clover/" style="font-size: 10px;">clover</a> <a href="/tags/css/" style="font-size: 13.33px;">css</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/gtd/" style="font-size: 10px;">gtd</a> <a href="/tags/hackintosh/" style="font-size: 11.67px;">hackintosh</a> <a href="/tags/html/" style="font-size: 11.67px;">html</a> <a href="/tags/iphone/" style="font-size: 10px;">iphone</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/macos/" style="font-size: 11.67px;">macos</a> <a href="/tags/nuxtjs/" style="font-size: 16.67px;">nuxtjs</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/ssr/" style="font-size: 16.67px;">ssr</a> <a href="/tags/switchyomega/" style="font-size: 10px;">switchyomega</a> <a href="/tags/vue/" style="font-size: 18.33px;">vue</a> <a href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" style="font-size: 11.67px;">黑苹果</a>
+        <a href="/tags/apple/" style="font-size: 11.67px;">apple</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/charles/" style="font-size: 11.67px;">charles</a> <a href="/tags/chrome/" style="font-size: 11.67px;">chrome</a> <a href="/tags/clover/" style="font-size: 10px;">clover</a> <a href="/tags/css/" style="font-size: 13.33px;">css</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/gtd/" style="font-size: 10px;">gtd</a> <a href="/tags/hackintosh/" style="font-size: 11.67px;">hackintosh</a> <a href="/tags/html/" style="font-size: 11.67px;">html</a> <a href="/tags/iphone/" style="font-size: 10px;">iphone</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/macos/" style="font-size: 11.67px;">macos</a> <a href="/tags/nuxtjs/" style="font-size: 16.67px;">nuxtjs</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/ssr/" style="font-size: 16.67px;">ssr</a> <a href="/tags/switchyomega/" style="font-size: 10px;">switchyomega</a> <a href="/tags/vue/" style="font-size: 18.33px;">vue</a> <a href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" style="font-size: 11.67px;">黑苹果</a>
     </div>
 </div>
     
@@ -613,6 +706,32 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-01T05:05:25.000Z">2020-07-01</time></div>
+                    <a href="/front-end/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库基础知识</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-21T13:16:07.000Z">2020-06-21</time></div>
+                    <a href="/python/%E5%85%A8%E7%BD%91%E6%96%B0%E9%97%BB%E5%85%A8%E7%9F%A5%E9%81%93%E4%B9%8B%E5%88%A9%E7%94%A8Python-AsyncIO%E6%8A%93%E5%8F%96%E7%99%BE%E5%BA%A6%E6%96%B0%E9%97%BB/" class="title has-link-black-ter is-size-6 has-text-weight-normal">全网新闻全知道之利用 Python AsyncIO 抓取百度新闻</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/python/">python</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -648,32 +767,6 @@
                     <a href="/python/Python-matplotlib-%E7%9B%B4%E6%96%B9%E5%9B%BE%E5%A1%AB%E5%85%85%E6%96%9C%E7%BA%BF-%E6%96%B9%E4%BE%BF%E8%AE%BA%E6%96%87%E6%89%93%E5%8D%B0/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Python matplotlib 直方图填充斜线 方便论文打印</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/python/">python</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-14T12:45:24.000Z">2020-05-14</time></div>
-                    <a href="/python/%E7%BA%AF%E7%BA%AF%E5%B0%8F%E7%99%BD%E5%90%91-Windows%E4%B8%8B%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEPython%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="title has-link-black-ter is-size-6 has-text-weight-normal">纯纯小白向 Windows下如何配置Python开发环境</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/python/">python</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-16T09:07:37.000Z">2020-04-16</time></div>
-                    <a href="/front-end/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E5%81%9A%E4%B8%9A%E5%8A%A1%E4%BB%8B%E7%BB%8D/" class="title has-link-black-ter is-size-6 has-text-weight-normal">程序代做业务介绍</a>
-                    <p class="is-size-7 is-uppercase">
-                        
                     </p>
                 </div>
             </div>
