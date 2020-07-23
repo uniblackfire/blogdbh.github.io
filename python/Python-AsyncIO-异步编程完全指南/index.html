@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+    <meta charset="utf-8" />
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-166814285-1"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-166814285-1');
+</script>
+
+<meta name="generator" content="Hexo 4.2.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>Python AsyncIO 异步编程完全指南 - 毕业Pro - 毕业Pro|专业计算机程序作业代做,CS代写,Python代做,Java代做,算法代做,程序代做,机器学习代做</title>
+
+
+    <meta name="description" content="AsyncIO 是一种并发编程设计，已在Python中获得了专门的支持，从Python 3.4到3.7以及可能以后的版本迅速发展。本教程旨在帮助您回答该问题，从而使您对Python的AsyncIO方法有更深入的了解。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python AsyncIO 异步编程完全指南">
+<meta property="og:url" content="https://blog.biye.pro/python/Python-AsyncIO-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="毕业Pro - 毕业Pro|专业计算机程序作业代做,CS代写,Python代做,Java代做,算法代做,程序代做,机器学习代做">
+<meta property="og:description" content="AsyncIO 是一种并发编程设计，已在Python中获得了专门的支持，从Python 3.4到3.7以及可能以后的版本迅速发展。本教程旨在帮助您回答该问题，从而使您对Python的AsyncIO方法有更深入的了解。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.biye.pro/images/og_image.png">
+<meta property="article:published_time" content="2020-07-20T04:09:49.000Z">
+<meta property="article:modified_time" content="2020-07-20T04:13:12.492Z">
+<meta property="article:author" content="毕业Pro">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.biye.pro/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon-32x32.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+<style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+    
+    
+    
+    
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+    
+    
+    
+    
+    
+    
+    
+    <link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/favicon-32x32.png" alt="Python AsyncIO 异步编程完全指南" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">Home</a>
+                
+                <a class="navbar-item"
+                href="/archives">Archives</a>
+                
+                <a class="navbar-item"
+                href="/categories">Categories</a>
+                
+                <a class="navbar-item"
+                href="/tags">Tags</a>
+                
+                <a class="navbar-item"
+                href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-8-widescreen has-order-2 column-main">
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                
+                <time class="level-item has-text-grey" datetime="2020-07-20T04:09:49.000Z">2020-07-20</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/python/">python</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    2 hours read (About 14045 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Python AsyncIO 异步编程完全指南
+            
+        </h1>
+        <div class="content">
+            <p>AsyncIO 是一种并发编程设计，已在Python中获得了专门的支持，从Python 3.4到3.7以及可能以后的版本迅速发展。</p>
+<p>您可能会担心“并发，并行性，线程化，多处理。 已经掌握了很多东西。AsyncIO放在哪里？”</p>
+<p>本教程旨在帮助您回答该问题，从而使您对Python的AsyncIO方法有更深入的了解。</p>
+<p><strong>这是要介绍的内容</strong>：</p>
+<ul>
+<li><p><strong>异步IO（AsyncIO）：</strong> 一种与语言无关的范例（模型），具有跨多种编程语言的实现</p>
+</li>
+<li><p><strong>异步/等待：</strong> 两个新的Python关键字，用于定义协程</p>
+</li>
+<li><p><strong>asyncio：</strong> Python软件包，为运行和管理协程提供了基础和API</p>
+</li>
+</ul>
+<p>协程（专门的生成器函数）是Python中异步IO的核心，稍后我们将深入探讨它们。</p>
+<h2 id="设置环境"><a href="#设置环境" class="headerlink" title="设置环境"></a>设置环境</h2><p>您需要Python 3.7或更高版本才能完整阅读本文，以及aiohttp和aiofiles软件包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ python3.7 -m venv ./py37async</span><br><span class="line">$ <span class="built_in">source</span> ./py37async/bin/activate  <span class="comment"># Windows: .\py37async\Scripts\activate.bat</span></span><br><span class="line">$ pip install --upgrade pip aiohttp aiofiles  <span class="comment"># Optional: aiodns</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="异步IO概览"><a href="#异步IO概览" class="headerlink" title="异步IO概览"></a>异步IO概览</h2><p>比起多处理和线程处理，异步IO的相关资料要少很多。 本节将为您提供什么是异步IO以及它如何适应其周围环境的完整图谱。</p>
+<h3 id="异步IO用在哪里"><a href="#异步IO用在哪里" class="headerlink" title="异步IO用在哪里"></a>异步IO用在哪里</h3><p>并发和并行性是不容易涉足的扩展主题。尽管本文着重介绍异步IO及其在Python中的实现，但值得花一点时间将异步IO与同类产品进行比较，以了解异步IO如何适应更大，有时令人头晕的难题。</p>
+<p><strong>并行性</strong>包括同时执行多个操作。<strong>多进程</strong>是一种实现并行性的方法，它需要将任务分散到计算机的中央处理单元（CPU或内核）上。多重处理非常适合CPU限制的任务：紧密结合循环和数学计算通常属于此类。</p>
+<p><strong>并发</strong>是比并行性稍微宽泛的术语。这表明多个任务具有以重叠方式运行的能力。 （有一种说法是并发并不意味着并行。）</p>
+<p><strong>线程</strong>是并发执行模型，多个线程轮流执行任务。一个进程可以包含多个线程。由于具有GIL，Python与线程之间的关系非常复杂，但这超出了本文的范围。</p>
+<p>重要的是要知道线程化对于IO绑定的任务来说更好。尽管CPU密集型任务的特征是计算机内核从头到尾不断地努力工作，但IO受限型工作主要由大量等待输入/输出来完成。</p>
+<p>综上所述，并发包括多处理（理想的是CPU绑定任务）和线程处理（适用于IO绑定任务）。多处理是并行性的一种形式，并行性是并发的特定类型（子集）。 Python标准库通过其多处理，线程和parallel.futures包为这两者提供了长期支持。</p>
+<p>现在是时候让一个新成员加入了。在过去的几年中，CPython中已经更加全面地构建了一个独立的设计：异步IO，它通过标准库的asyncio包和新的async和await语言关键字启用。需要明确的是，异步IO并不是一个新发明的概念，它已经存在或正在内置到其他语言和运行时环境中，例如Go，C＃或Scala。</p>
+<p>Python文档将asyncio软件包记为一个用于编写并发代码的库。但是，异步IO不是线程化，也不是多处理。它不是建立在这两个之上的。</p>
+<p>实际上，异步IO是一种单线程，单进程设计：它使用<strong>协作多任务处理</strong>，这个术语您将在本教程结束时充实。换句话说，尽管在单个进程中使用单个线程，但异步IO却带来了并发的感觉。协程（异步IO的主要功能）可以并发进行调度，但是它们并不是天生并发的。</p>
+<p>重申一下，异步IO是并发编程的一种形式，但它不是并行性。与多线程处理相比，它与线程处理的关系更加紧密，但两者却截然不同，并且是并发技巧包中的独立成员。</p>
+<p><strong>异步</strong>是什么意思？ 这不是一个严格的定义，但是出于我们此处的目的，我可以想到两个属性：</p>
+<ul>
+<li>异步例程可以在等待其最终结果的同时“暂停”，并让其他协程同时运行。</li>
+<li>通过上述机制，异步代码有助于并发执行。 换句话说，异步代码给出了并发的外观。</li>
+</ul>
+<p>这是将所有内容放在一起的图表。 白色术语代表概念，绿色术语代表其实现或实现的方式：</p>
+<img src="/python/Python-AsyncIO-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/asyncio1.jpg" class="">
+
+<p>我将停止并发编程模型之间的比较。 本教程的重点是异步IO的子组件，如何使用它以及围绕它兴起的API。</p>
+<h2 id="异步IO解释"><a href="#异步IO解释" class="headerlink" title="异步IO解释"></a>异步IO解释</h2><p>异步IO乍看起来似乎违反直觉和自相矛盾。 促进并发代码的事物如何使用单个线程和单个CPU内核？ 我从来都不擅长制作示例，所以我想解释一下Miguel Grinberg在2017年的PyCon演讲中的一个，它很好地解释了所有内容：</p>
+<blockquote>
+<p>国际象棋大师朱迪特·波尔加尔（JuditPolgár）举办国际象棋展览，在其中她扮演多个业余玩家。 她有两种举办展览的方式：同步和异步。</p>
+</blockquote>
+<blockquote>
+<p>假设</p>
+<ul>
+<li>24个对手</li>
+<li>Judit在5秒内使每盘棋移动</li>
+<li>对手各花费55秒采取行动</li>
+<li>游戏平均30对动作（总共60个动作）</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>同步版本：Judit一次只能玩一场游戏，决不能一次玩两局，直到游戏完成为止。 每个游戏需要（55 + 5）* 30 == 1800秒或30分钟。 整个展览需要24 * 30 == 720分钟或12个小时。</p>
+</blockquote>
+<blockquote>
+<p>异步版本：Judit在一个表之间移动，在每个表上移动一个。 她离开桌子，让对手在等待时间内采取下一步行动。 在所有24场比赛中，一动需要Judit 24 * 5 == 120秒或2分钟。 整个展览现在缩短为120 * 30 == 3600秒，或仅1小时。</p>
+</blockquote>
+<p>JuditPolgár只有一只，只有两只手，一次只能动一动。 但是异步播放可以将展览时间从12小时减少到一小时。 因此，协作式多任务处理是一种奇特的方式，可以说程序的事件循环（稍后会详细介绍）与多个任务进行通信，以使每个任务在最佳时间轮流运行。</p>
+<p>异步IO需要较长的等待时间，否则功能将被阻塞，并允许其他功能在停机期间运行。 （有效阻止的功能从开始到返回为止一直禁止其他人运行。）</p>
+<h2 id="异步IO并不简单"><a href="#异步IO并不简单" class="headerlink" title="异步IO并不简单"></a>异步IO并不简单</h2><p>我听说：“尽可能使用异步IO； 必要时使用线程。” 事实是，构建持久的多线程代码可能很困难且容易出错。 异步IO避免了线程设计可能会遇到的某些潜在的速度颠簸。</p>
+<p>但这并不是说Python中的异步IO很简单。 请注意：当您冒险进入水平面以下时，异步编程也可能会很困难！ Python的异步模型是基于诸如回调，事件，传输，协议和期货之类的概念构建的，只是术语可能令人生畏。 其API不断变化的事实使其变得不那么容易。</p>
+<p>幸运的是，asyncio已经发展到其大部分功能不再是临时的程度，而其文档已得到了巨大的改进，与此相关的一些优质资源也开始出现。</p>
+<h2 id="asyncio包和async-await"><a href="#asyncio包和async-await" class="headerlink" title="asyncio包和async / await"></a>asyncio包和async / await</h2><p>现在，您已经对异步IO作为设计有了一定的了解，下面让我们探讨Python的实现。 Python的asyncio程序包（在Python 3.4中引入）及其两个关键字async和await具有不同的用途，但可以一起帮助您声明，构建，执行和管理异步代码。</p>
+<h3 id="async-await-语法和原生协同程序"><a href="#async-await-语法和原生协同程序" class="headerlink" title="async/await 语法和原生协同程序"></a>async/await 语法和原生协同程序</h3><p>异步IO的核心是协程。 协程是Python生成器函数的专用版本。 让我们从基线定义开始，然后在此处进行构建：协程是一个函数，可以在到达返回值之前暂停其执行，并且可以将控制权间接传递给另一个协程一段时间。</p>
+<p>稍后，您将更深入地研究如何将传统生成器准确地用于协程。 目前，了解协程工作方式的最简单方法是开始制作协程。</p>
+<p>让我们采用沉浸式方法并编写一些异步IO代码。 这个简短的程序是异步IO的Hello World，但是在说明其核心功能方面还有很长的路要走：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># countasync.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">count</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"One"</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(<span class="number">1</span>)</span><br><span class="line">    print(<span class="string">"Two"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">await</span> asyncio.gather(count(), count(), count())</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">import</span> time</span><br><span class="line">    s = time.perf_counter()</span><br><span class="line">    asyncio.run(main())</span><br><span class="line">    elapsed = time.perf_counter() - s</span><br><span class="line">    print(<span class="string">f"<span class="subst">&#123;__file__&#125;</span> executed in <span class="subst">&#123;elapsed:<span class="number">0.2</span>f&#125;</span> seconds."</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行此文件时，请注意与仅使用def和time.sleep（）定义函数的外观有所不同：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ python3 countasync.py</span><br><span class="line">One</span><br><span class="line">One</span><br><span class="line">One</span><br><span class="line">Two</span><br><span class="line">Two</span><br><span class="line">Two</span><br><span class="line">countasync.py executed <span class="keyword">in</span> 1.01 seconds.</span><br></pre></td></tr></table></figure>
+
+<p>此输出的顺序是异步IO的核心。 与<code>count()</code>的每个调用进行交谈都是一个事件循环或协调器。 当每个任务到达等待<code>asyncio.sleep(1)</code>时，该函数都会大喊事件循环并对其进行控制，并说：“我要睡一秒钟。 继续，让其他有意义的事情同时进行。”</p>
+<p>将此与同步版本进行对比：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># countsync.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">count</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"One"</span>)</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line">    print(<span class="string">"Two"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">        count()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    s = time.perf_counter()</span><br><span class="line">    main()</span><br><span class="line">    elapsed = time.perf_counter() - s</span><br><span class="line">    print(<span class="string">f"<span class="subst">&#123;__file__&#125;</span> executed in <span class="subst">&#123;elapsed:<span class="number">0.2</span>f&#125;</span> seconds."</span>)</span><br></pre></td></tr></table></figure>
+
+<p>当执行时，顺序和执行时间会有微小但关键的变化：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ python3 countsync.py</span><br><span class="line">One</span><br><span class="line">Two</span><br><span class="line">One</span><br><span class="line">Two</span><br><span class="line">One</span><br><span class="line">Two</span><br><span class="line">countsync.py executed <span class="keyword">in</span> 3.01 seconds.</span><br></pre></td></tr></table></figure>
+
+<p>虽然使用time.sleep（）和asyncio.sleep（）似乎很平庸，但它们用作涉及等待时间的所有耗时的过程的替身。 （您可以等待的最普通的事情是基本上不执行任何操作的sleep（）调用。）也就是说，time.sleep（）可以表示任何耗时的阻塞函数调用，而asyncio.sleep（）用于站立 进行非阻塞呼叫（但也需要一些时间才能完成）。</p>
+<p>正如您将在下一节中看到的那样，等待某些内容（包括asyncio.sleep（））的好处是，周围的函数可以暂时将控制权让给另一个更容易立即执行某项功能的函数。 相反，time.sleep（）或任何其他阻塞调用与异步Python代码不兼容，因为它将在睡眠时间内停止轨道中的所有内容。</p>
+<h2 id="异步IO规则"><a href="#异步IO规则" class="headerlink" title="异步IO规则"></a>异步IO规则</h2><p>此时，对async，await和它们创建的协程函数的更正式定义是有序的。 这部分内容比较繁琐，但是掌握异步/等待功能是有帮助的，因此，如果需要，请返回至此：</p>
+<ul>
+<li><p>语法async def引入了本机协程或异步生成器。 与和异步的表达式也有效，稍后您将看到它们。</p>
+</li>
+<li><p>关键字await将功能控制传递回事件循环。 （它暂停了周围协程的执行。）如果Python在g（）范围内遇到await f（）表达式，这就是await告诉事件循环的方式，“暂停g（）的执行，直到我等待的是 返回f（）的结果。 同时，让其他东西运行。”</p>
+</li>
+</ul>
+<p>在代码中，第二个要点大致如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">g</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># Pause here and come back to g() when f() is ready</span></span><br><span class="line">    r = <span class="keyword">await</span> f()</span><br><span class="line">    <span class="keyword">return</span> r</span><br></pre></td></tr></table></figure>
+
+<p>关于何时以及如何以及不可以使用异步/等待，还有一套严格的规则。无论您仍是语法还是已经使用async / await，这些都可以很方便：</p>
+<ul>
+<li><p>您使用async def引入的功能是协程。它可以使用await，return或yield，但是所有这些都是可选的。声明异步def noop（）：pass有效：</p>
+<ul>
+<li><p>使用等待和/或返回将创建协程函数。要调用协程函数，必须等待它以获得结果。</p>
+</li>
+<li><p>在异步def块中使用yield的情况不太普遍（并且只有最近才在Python中合法）。这将创建一个异步生成器，您可以使用异步生成器对其进行迭代。暂时不要使用异步生成器，而将重点放在获取协程函数的语法上，协程函数使用等待和/或返回。</p>
+</li>
+<li><p>用async def定义的任何内容都可能不使用yield from，这将引发SyntaxError。</p>
+</li>
+</ul>
+</li>
+<li><p>就像在def函数之外使用yield的SyntaxError一样，在异步def协程之外使用await也是SyntaxError。您只能在协程体内使用await。</p>
+</li>
+</ul>
+<p>以下是一些简短的示例，旨在总结上述几条规则：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    y = <span class="keyword">await</span> z(x)  <span class="comment"># OK - `await` and `return` allowed in coroutines</span></span><br><span class="line">    <span class="keyword">return</span> y</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">g</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">yield</span> x  <span class="comment"># OK - this is an async generator</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">m</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">from</span> gen(x)  <span class="comment"># No - SyntaxError</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">m</span><span class="params">(x)</span>:</span></span><br><span class="line">    y = <span class="keyword">await</span> z(x)  <span class="comment"># Still no - SyntaxError (no `async def` here)</span></span><br><span class="line">    <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure>
+
+<p>最后，当您使用await f（）时，要求f（）是可等待的对象。 好吧，那不是很有帮助，是吗？ 现在，只知道一个可等待的对象是（1）另一个协程或（2）定义返回迭代器的.__ await __（）dunder方法的对象。 如果您正在编写程序，则出于大多数目的，您只需要担心案例1。</p>
+<p>这给我们带来了另一个可能会弹出的技术区别：将函数标记为协程的一种较旧的方法是用@ asyncio.coroutine装饰一个普通的def函数。 结果是基于生成器的协程。 自从在Python 3.5中使用async / await语法以来，这种构造已经过时了。</p>
+<p>这两个协程在本质上是等效的（都可以等待），但是第一个协程基于生成器，而第二个是本地协程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"></span><br><span class="line"><span class="meta">@asyncio.coroutine</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">py34_coro</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""Generator-based coroutine, older syntax"""</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="keyword">from</span> stuff()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">py35_coro</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""Native coroutine, modern syntax"""</span></span><br><span class="line">    <span class="keyword">await</span> stuff()</span><br></pre></td></tr></table></figure>
+
+<p>如果您自己编写任何代码，则最好使用本机协程，以使其显式而不是隐式。基于生成器的协程将在Python 3.10中删除。</p>
+<p>在本教程的后半部分，我们将仅出于说明的目的触及基于生成器的协程。引入异步/等待的原因是为了使协程成为Python的独立功能，可以很容易地将其与普通的生成器函数区分开，从而减少了歧义。</p>
+<p>不要陷入基于发电机的协程中，这些协程已经被异步/等待故意地过时了。它们有自己的一小套规则（例如，不能在基于生成器的协程中使用await），如果您坚持使用async / await语法，则这些规则在很大程度上是不相关的。</p>
+<p>事不宜迟，让我们举一些更多的例子。</p>
+<p>这是异步IO如何减少等待时间的一个示例：给定一个协程makerandom（），该协程不断产生范围为[0，10]的随机整数，直到其中一个超过阈值为止，您要让该协程多次调用不需要等待彼此相继完成。您可以在很大程度上遵循上述两个脚本的模式，并稍作更改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># rand.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment"># ANSI colors</span></span><br><span class="line">c = (</span><br><span class="line">    <span class="string">"\033[0m"</span>,   <span class="comment"># End of color</span></span><br><span class="line">    <span class="string">"\033[36m"</span>,  <span class="comment"># Cyan</span></span><br><span class="line">    <span class="string">"\033[91m"</span>,  <span class="comment"># Red</span></span><br><span class="line">    <span class="string">"\033[35m"</span>,  <span class="comment"># Magenta</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">makerandom</span><span class="params">(idx: int, threshold: int = <span class="number">6</span>)</span> -&gt; int:</span></span><br><span class="line">    print(c[idx + <span class="number">1</span>] + <span class="string">f"Initiated makerandom(<span class="subst">&#123;idx&#125;</span>)."</span>)</span><br><span class="line">    i = random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">while</span> i &lt;= threshold:</span><br><span class="line">        print(c[idx + <span class="number">1</span>] + <span class="string">f"makerandom(<span class="subst">&#123;idx&#125;</span>) == <span class="subst">&#123;i&#125;</span> too low; retrying."</span>)</span><br><span class="line">        <span class="keyword">await</span> asyncio.sleep(idx + <span class="number">1</span>)</span><br><span class="line">        i = random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">    print(c[idx + <span class="number">1</span>] + <span class="string">f"---&gt; Finished: makerandom(<span class="subst">&#123;idx&#125;</span>) == <span class="subst">&#123;i&#125;</span>"</span> + c[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">return</span> i</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    res = <span class="keyword">await</span> asyncio.gather(*(makerandom(i, <span class="number">10</span> - i - <span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>)))</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    random.seed(<span class="number">444</span>)</span><br><span class="line">    r1, r2, r3 = asyncio.run(main())</span><br><span class="line">    print()</span><br><span class="line">    print(<span class="string">f"r1: <span class="subst">&#123;r1&#125;</span>, r2: <span class="subst">&#123;r2&#125;</span>, r3: <span class="subst">&#123;r3&#125;</span>"</span>)</span><br></pre></td></tr></table></figure>
+
+<p>如图所示：</p>
+<img src="/python/Python-AsyncIO-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/asyncio2.gif" class="">
+
+<p>该程序使用一个主要协程makemakerandom（），并在3个不同的输入上同时运行它。大多数程序将包含小型模块化协程和一个包装器功能，用于将每个较小的协程链接在一起。 main（）然后用于通过在一些可迭代或池中映射中央协程来收集任务（未来）。</p>
+<p>在此微型示例中，池为range（3）。在稍后提供的完整示例中，它是需要同时请求，解析和处理的一组URL，并且main（）为每个URL封装整个例程。</p>
+<p>尽管“制作随机整数”（比CPU绑定更多的东西）可能不是asyncio的最佳选择，但在示例中正是asyncio.sleep（）的存在旨在模仿IO绑定的过程等待时间不确定的地方。例如，asyncio.sleep（）调用可能表示消息应用程序中两个客户端之间发送和接收非随机整数。</p>
+<h2 id="异步IO设计模式"><a href="#异步IO设计模式" class="headerlink" title="异步IO设计模式"></a>异步IO设计模式</h2><p>异步IO带有自己的一组可能的脚本设计，本节将介绍它们。</p>
+<h3 id="链协程"><a href="#链协程" class="headerlink" title="链协程"></a>链协程</h3><p>协程的一个关键特征是它们可以链接在一起。 （请记住，一个协程对象是可以等待的，因此另一个协程可以等待它。）这使您可以将程序分解为较小的，可管理的，可回收的协程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chained.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">part1</span><span class="params">(n: int)</span> -&gt; str:</span></span><br><span class="line">    i = random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">    print(<span class="string">f"part1(<span class="subst">&#123;n&#125;</span>) sleeping for <span class="subst">&#123;i&#125;</span> seconds."</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(i)</span><br><span class="line">    result = <span class="string">f"result<span class="subst">&#123;n&#125;</span>-1"</span></span><br><span class="line">    print(<span class="string">f"Returning part1(<span class="subst">&#123;n&#125;</span>) == <span class="subst">&#123;result&#125;</span>."</span>)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">part2</span><span class="params">(n: int, arg: str)</span> -&gt; str:</span></span><br><span class="line">    i = random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">    print(<span class="string">f"part2<span class="subst">&#123;n, arg&#125;</span> sleeping for <span class="subst">&#123;i&#125;</span> seconds."</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(i)</span><br><span class="line">    result = <span class="string">f"result<span class="subst">&#123;n&#125;</span>-2 derived from <span class="subst">&#123;arg&#125;</span>"</span></span><br><span class="line">    print(<span class="string">f"Returning part2<span class="subst">&#123;n, arg&#125;</span> == <span class="subst">&#123;result&#125;</span>."</span>)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">chain</span><span class="params">(n: int)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">    start = time.perf_counter()</span><br><span class="line">    p1 = <span class="keyword">await</span> part1(n)</span><br><span class="line">    p2 = <span class="keyword">await</span> part2(n, p1)</span><br><span class="line">    end = time.perf_counter() - start</span><br><span class="line">    print(<span class="string">f"--&gt;Chained result<span class="subst">&#123;n&#125;</span> =&gt; <span class="subst">&#123;p2&#125;</span> (took <span class="subst">&#123;end:<span class="number">0.2</span>f&#125;</span> seconds)."</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(*args)</span>:</span></span><br><span class="line">    <span class="keyword">await</span> asyncio.gather(*(chain(n) <span class="keyword">for</span> n <span class="keyword">in</span> args))</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">import</span> sys</span><br><span class="line">    random.seed(<span class="number">444</span>)</span><br><span class="line">    args = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] <span class="keyword">if</span> len(sys.argv) == <span class="number">1</span> <span class="keyword">else</span> map(int, sys.argv[<span class="number">1</span>:])</span><br><span class="line">    start = time.perf_counter()</span><br><span class="line">    asyncio.run(main(*args))</span><br><span class="line">    end = time.perf_counter() - start</span><br><span class="line">    print(<span class="string">f"Program finished in <span class="subst">&#123;end:<span class="number">0.2</span>f&#125;</span> seconds."</span>)</span><br></pre></td></tr></table></figure>
+
+<p>注意输出，part1（）睡眠一段可变的时间，part2（）在结果可用时开始处理它们：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ python3 chained.py 9 6 3</span><br><span class="line">part1(9) sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">part1(6) sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">part1(3) sleeping <span class="keyword">for</span> 0 seconds.</span><br><span class="line">Returning part1(3) == result3-1.</span><br><span class="line">part2(3, <span class="string">'result3-1'</span>) sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">Returning part1(9) == result9-1.</span><br><span class="line">part2(9, <span class="string">'result9-1'</span>) sleeping <span class="keyword">for</span> 7 seconds.</span><br><span class="line">Returning part1(6) == result6-1.</span><br><span class="line">part2(6, <span class="string">'result6-1'</span>) sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">Returning part2(3, <span class="string">'result3-1'</span>) == result3-2 derived from result3-1.</span><br><span class="line">--&gt;Chained result3 =&gt; result3-2 derived from result3-1 (took 4.00 seconds).</span><br><span class="line">Returning part2(6, <span class="string">'result6-1'</span>) == result6-2 derived from result6-1.</span><br><span class="line">--&gt;Chained result6 =&gt; result6-2 derived from result6-1 (took 8.01 seconds).</span><br><span class="line">Returning part2(9, <span class="string">'result9-1'</span>) == result9-2 derived from result9-1.</span><br><span class="line">--&gt;Chained result9 =&gt; result9-2 derived from result9-1 (took 11.01 seconds).</span><br><span class="line">Program finished <span class="keyword">in</span> 11.01 seconds.</span><br></pre></td></tr></table></figure>
+
+<p>在此设置中，main（）的运行时间将等于它收集在一起并计划的任务的最大运行时间。</p>
+<h3 id="使用队列"><a href="#使用队列" class="headerlink" title="使用队列"></a>使用队列</h3><p>asyncio软件包提供的队列类旨在与队列模块的类相似。到目前为止，在我们的示例中，我们实际上并不需要队列结构。在chained.py中，每个任务（未来）都由一组协程组成，这些协程明确地相互等待，并通过每条链上的单个输入。</p>
+<p>还有一种可以与异步IO一起使用的替代结构：彼此不相关的许多生产者将项目添加到队列中。每个生产者可以在交错，随机，未通知的时间将多个项目添加到队列中。一群消费者在贪婪地出现时将它们从队列中拉出，而不必等待任何其他信号。</p>
+<p>在这种设计中，没有任何个人消费者链接到生产者。消费者不知道生产者的数量，甚至不知道将要添加到队列中的项目的累计数量。</p>
+<p>每个生产者或消费者花费可变的时间分别从队列中放入和提取项目。队列用作可以与生产者和消费者进行通信的吞吐量，而无需他们彼此直接交谈。</p>
+<blockquote>
+<p>注意：尽管由于queue.Queue（）的线程安全性，所以队列经常在线程程序中使用，但异步IO时您不必担心线程安全。 （当您将两者结合在一起时是个例外，但是本教程中没有这样做。）</p>
+</blockquote>
+<blockquote>
+<p>队列的一个用例（如此处的情况）是队列充当生产者和消费者的发送者，而这些生产者和消费者在其他情况下并没有直接链接或关联。</p>
+</blockquote>
+<p>该程序的同步版本看起来非常令人沮丧：一组阻塞的生产者将项目串行添加到队列中，一次添加一个生产者。只有在所有生产者都完成之后，才能由一个消费者逐项处理队列。此设计存在大量延迟。物品可能闲置地排在队列中，而不是立即拿起并处理。</p>
+<p>下面是一个异步版本asyncq.py。此工作流程中具有挑战性的部分是，需要向消费者发出生产已完成的信号。否则，await q.get（）将无限期地挂起，因为队列已被完全处理，但是消费者不会知道生产已经完成。</p>
+<p>（非常感谢StackOverflow用户提供的一些帮助，帮助他们整理了main（）：关键是等待q.join（），该操作将阻塞直到队列中的所有项目都已被接收并处理，然后取消使用方）任务，否则将挂断并无休止地等待其他队列项目出现。）</p>
+<p>这是完整的脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># asyncq.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> itertools <span class="keyword">as</span> it</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">makeitem</span><span class="params">(size: int = <span class="number">5</span>)</span> -&gt; str:</span></span><br><span class="line">    <span class="keyword">return</span> os.urandom(size).hex()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">randsleep</span><span class="params">(a: int = <span class="number">1</span>, b: int = <span class="number">5</span>, caller=None)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">    i = random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">if</span> caller:</span><br><span class="line">        print(<span class="string">f"<span class="subst">&#123;caller&#125;</span> sleeping for <span class="subst">&#123;i&#125;</span> seconds."</span>)</span><br><span class="line">    <span class="keyword">await</span> asyncio.sleep(i)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">produce</span><span class="params">(name: int, q: asyncio.Queue)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">    n = random.randint(<span class="number">0</span>, <span class="number">10</span>)</span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> it.repeat(<span class="literal">None</span>, n):  <span class="comment"># Synchronous loop for each single producer</span></span><br><span class="line">        <span class="keyword">await</span> randsleep(caller=<span class="string">f"Producer <span class="subst">&#123;name&#125;</span>"</span>)</span><br><span class="line">        i = <span class="keyword">await</span> makeitem()</span><br><span class="line">        t = time.perf_counter()</span><br><span class="line">        <span class="keyword">await</span> q.put((i, t))</span><br><span class="line">        print(<span class="string">f"Producer <span class="subst">&#123;name&#125;</span> added &lt;<span class="subst">&#123;i&#125;</span>&gt; to queue."</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">consume</span><span class="params">(name: int, q: asyncio.Queue)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">await</span> randsleep(caller=<span class="string">f"Consumer <span class="subst">&#123;name&#125;</span>"</span>)</span><br><span class="line">        i, t = <span class="keyword">await</span> q.get()</span><br><span class="line">        now = time.perf_counter()</span><br><span class="line">        print(<span class="string">f"Consumer <span class="subst">&#123;name&#125;</span> got element &lt;<span class="subst">&#123;i&#125;</span>&gt;"</span></span><br><span class="line">              <span class="string">f" in <span class="subst">&#123;now-t:<span class="number">0.5</span>f&#125;</span> seconds."</span>)</span><br><span class="line">        q.task_done()</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(nprod: int, ncon: int)</span>:</span></span><br><span class="line">    q = asyncio.Queue()</span><br><span class="line">    producers = [asyncio.create_task(produce(n, q)) <span class="keyword">for</span> n <span class="keyword">in</span> range(nprod)]</span><br><span class="line">    consumers = [asyncio.create_task(consume(n, q)) <span class="keyword">for</span> n <span class="keyword">in</span> range(ncon)]</span><br><span class="line">    <span class="keyword">await</span> asyncio.gather(*producers)</span><br><span class="line">    <span class="keyword">await</span> q.join()  <span class="comment"># Implicitly awaits consumers, too</span></span><br><span class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> consumers:</span><br><span class="line">        c.cancel()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">import</span> argparse</span><br><span class="line">    random.seed(<span class="number">444</span>)</span><br><span class="line">    parser = argparse.ArgumentParser()</span><br><span class="line">    parser.add_argument(<span class="string">"-p"</span>, <span class="string">"--nprod"</span>, type=int, default=<span class="number">5</span>)</span><br><span class="line">    parser.add_argument(<span class="string">"-c"</span>, <span class="string">"--ncon"</span>, type=int, default=<span class="number">10</span>)</span><br><span class="line">    ns = parser.parse_args()</span><br><span class="line">    start = time.perf_counter()</span><br><span class="line">    asyncio.run(main(**ns.__dict__))</span><br><span class="line">    elapsed = time.perf_counter() - start</span><br><span class="line">    print(<span class="string">f"Program completed in <span class="subst">&#123;elapsed:<span class="number">0.5</span>f&#125;</span> seconds."</span>)</span><br></pre></td></tr></table></figure>
+
+<p>前几个协程是辅助函数，它们返回一个随机字符串，一个小数秒性能计数器和一个随机整数。 生产者将1到5个项目放入队列中。 每个项目都是（i，t）的元组，其中i是随机字符串，t是生产者尝试将元组放入队列的时间。</p>
+<p>消费者将商品拉出时，它仅使用放入商品的时间戳来计算该商品在队列中的经过时间。</p>
+<p>请记住，asyncio.sleep（）用于模仿其他一些更复杂的协程，如果这是常规的阻止函数，则会消耗时间并阻止所有其他执行。</p>
+<p>这是由两个生产者和五个消费者进行的测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ python3 asyncq.py -p 2 -c 5</span><br><span class="line">Producer 0 sleeping <span class="keyword">for</span> 3 seconds.</span><br><span class="line">Producer 1 sleeping <span class="keyword">for</span> 3 seconds.</span><br><span class="line">Consumer 0 sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">Consumer 1 sleeping <span class="keyword">for</span> 3 seconds.</span><br><span class="line">Consumer 2 sleeping <span class="keyword">for</span> 3 seconds.</span><br><span class="line">Consumer 3 sleeping <span class="keyword">for</span> 5 seconds.</span><br><span class="line">Consumer 4 sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">Producer 0 added &lt;377b1e8f82&gt; to queue.</span><br><span class="line">Producer 0 sleeping <span class="keyword">for</span> 5 seconds.</span><br><span class="line">Producer 1 added &lt;413b8802f8&gt; to queue.</span><br><span class="line">Consumer 1 got element &lt;377b1e8f82&gt; <span class="keyword">in</span> 0.00013 seconds.</span><br><span class="line">Consumer 1 sleeping <span class="keyword">for</span> 3 seconds.</span><br><span class="line">Consumer 2 got element &lt;413b8802f8&gt; <span class="keyword">in</span> 0.00009 seconds.</span><br><span class="line">Consumer 2 sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">Producer 0 added &lt;06c055b3ab&gt; to queue.</span><br><span class="line">Producer 0 sleeping <span class="keyword">for</span> 1 seconds.</span><br><span class="line">Consumer 0 got element &lt;06c055b3ab&gt; <span class="keyword">in</span> 0.00021 seconds.</span><br><span class="line">Consumer 0 sleeping <span class="keyword">for</span> 4 seconds.</span><br><span class="line">Producer 0 added &lt;17a8613276&gt; to queue.</span><br><span class="line">Consumer 4 got element &lt;17a8613276&gt; <span class="keyword">in</span> 0.00022 seconds.</span><br><span class="line">Consumer 4 sleeping <span class="keyword">for</span> 5 seconds.</span><br><span class="line">Program completed <span class="keyword">in</span> 9.00954 seconds.</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，项目将在几分之一秒内完成处理。延迟可能有两个原因：</p>
+<ul>
+<li>标准，在很大程度上是不可避免的开销<br>当项目出现在队列中时所有消费者都在睡觉的情况</li>
+<li>关于第二个原因，幸运的是，扩展到成百上千的消费者是完全正常的。 python3 asyncq.py -p 5 -c 100应该没有问题。这里的要点是，从理论上讲，您可以在不同的系统上使用不同的用户来控制生产者和消费者的管理，而队列则作为中心吞吐量。</li>
+</ul>
+<p>到目前为止，您已经陷入困境，并看到了三个相关的示例，这些示例显示了异步调用用async和await定义的协程。如果您不完全遵循或只是想更深入地了解现代协程在Python中的使用机理，那么您将从第一节开始下一节。</p>
+<h2 id="异步IO的根源"><a href="#异步IO的根源" class="headerlink" title="异步IO的根源"></a>异步IO的根源</h2><p>之前，您看到了一个基于生成器的老式协程的示例，这些协程已被更明确的本地协程过时了。该示例值得稍作调整以重新显示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"></span><br><span class="line"><span class="meta">@asyncio.coroutine</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">py34_coro</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""Generator-based coroutine"""</span></span><br><span class="line">    <span class="comment"># No need to build these yourself, but be aware of what they are</span></span><br><span class="line">    s = <span class="keyword">yield</span> <span class="keyword">from</span> stuff()</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">py35_coro</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""Native coroutine, modern syntax"""</span></span><br><span class="line">    s = <span class="keyword">await</span> stuff()</span><br><span class="line">    <span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">stuff</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0x10</span>, <span class="number">0x20</span>, <span class="number">0x30</span></span><br></pre></td></tr></table></figure>
+
+<p>作为实验，如果不经等待就调用py34_coro（）或py35_coro（），而没有等待，也没有对asyncio.run（）或其他asyncio“瓷器”函数的任何调用，会发生什么？ 孤立地调用协程将返回协程对象：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; py35_coro()</span><br><span class="line">&lt;coroutine object py35_coro at 0x10126dcc8&gt;</span><br></pre></td></tr></table></figure>
+
+<p>表面上这不是很有趣。 单独调用协程的结果是一个等待的协程对象。</p>
+<p>测验时间：Python还有什么其他功能？ （当单独调用Python时，Python的什么功能实际上并没有“做什么”？）</p>
+<p>希望您将生成器视为此问题的答案，因为协程是引擎盖下的增强型生成器。 在这方面，行为是相似的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">gen</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">yield</span> <span class="number">0x10</span>, <span class="number">0x20</span>, <span class="number">0x30</span></span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g = gen()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g  <span class="comment"># Nothing much happens - need to iterate with `.__next__()`</span></span><br><span class="line">&lt;generator object gen at <span class="number">0x1012705e8</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(g)</span><br><span class="line">(<span class="number">16</span>, <span class="number">32</span>, <span class="number">48</span>)</span><br></pre></td></tr></table></figure>
+
+<p>碰巧的是，生成器函数是异步IO的基础（无论您是否使用异步def声明协程，而不是使用旧的@ asyncio.coroutine包装器声明协程）。 从技术上讲，等待比从收益更类似于收益。 （但请记住，x（）的收益只是句法糖，可以代替x（）中的i：收益i。）</p>
+<p>与异步IO有关的生成器的一项关键功能是可以有效地随意停止和重新启动它们。 例如，您可以中断对生成器对象的迭代，然后在以后的其余值上恢复迭代。 当生成器函数达到yield时，它会生成该值，但随后会处于空闲状态，直到被告知要生成其后续值。</p>
+<p>可以通过一个示例充实一下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> itertools <span class="keyword">import</span> cycle</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="function"><span class="keyword">def</span> <span class="title">endless</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="string">"""Yields 9, 8, 7, 6, 9, 8, 7, 6, ... forever"""</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">yield</span> <span class="keyword">from</span> cycle((<span class="number">9</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>e = endless()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>total = <span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">for</span> i <span class="keyword">in</span> e:</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">if</span> total &lt; <span class="number">30</span>:</span><br><span class="line"><span class="meta">... </span>        print(i, end=<span class="string">" "</span>)</span><br><span class="line"><span class="meta">... </span>        total += i</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">else</span>:</span><br><span class="line"><span class="meta">... </span>        print()</span><br><span class="line"><span class="meta">... </span>        <span class="comment"># Pause execution. We can resume later.</span></span><br><span class="line"><span class="meta">... </span>        <span class="keyword">break</span></span><br><span class="line"><span class="number">9</span> <span class="number">8</span> <span class="number">7</span> <span class="number">6</span> <span class="number">9</span> <span class="number">8</span> <span class="number">7</span> <span class="number">6</span> <span class="number">9</span> <span class="number">8</span> <span class="number">7</span> <span class="number">6</span> <span class="number">9</span> <span class="number">8</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># Resume</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>next(e), next(e), next(e)</span><br><span class="line">(<span class="number">6</span>, <span class="number">9</span>, <span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
+<p>关键字await的行为类似，它标记了协程自身暂停并让其他协程工作的断点。在这种情况下，“暂停”是指已暂时放弃控制权但尚未完全退出或结束的协程。请记住，收益率，从广义上讲是等待收益率，是生成器执行过程中的一个断点。</p>
+<p>这是函数和生成器之间的根本区别。一个功能是全有还是全无。一旦启动，它不会停止，直到它返回收益，然后将该值推送给调用方（调用它的函数）。另一方面，发电机每次达到产量时都会暂停，并且不再前进。它不仅可以将该值推送到调用堆栈，而且还可以在通过调用next（）恢复它时保留其局部变量。</p>
+<p>发电机的第二个鲜为人知的功能也很重要。您也可以通过其.send（）方法将值发送到生成器中。这允许生成器（和协程）相互调用（等待）而不会阻塞。我不会再赘述此功能了，因为它主要对幕后协程的实现很重要，但是您根本不需要自己直接使用它。</p>
+<p>如果您有兴趣探索更多内容，可以从正式引入协程的PEP 342开始。布雷特·坎农（Brett Cannon）的《如何在Python中进行异步等待》也是一本不错的书，关于异步的PYMOTW文章也很不错。最后，还有大卫·比兹利（David Beazley）的有关协程和并发的好奇课程，它深入探讨了协程的运行机制。</p>
+<p>让我们尝试将以上所有文章压缩成几句话：这些协程实际上是通过一种特殊的非常规机制运行的。它们的结果是异常对象的属性，该异常对象在调用其.send（）方法时被抛出。所有这些还有更多的细节，但这可能无法帮助您在实践中使用这部分语言，因此，让我们继续。</p>
+<p>为了将事情联系在一起，以下是协程作为生成器的一些关键点：</p>
+<ul>
+<li><p>协程是经过重新利用的生成器，可以利用生成器方法的独特性。</p>
+</li>
+<li><p>基于老式生成器的协程使用yield from等待协程结果。本机协程中的现代Python语法仅将yield from与await替换为等待协程结果的方法。等待类似于从中获得收益，通常有助于将其视为收益。</p>
+</li>
+<li><p>使用await是标记断点的信号。它允许协程暂时中止执行，并允许程序稍后返回。</p>
+</li>
+</ul>
+<h3 id="其他功能：异步和异步生成器-理解"><a href="#其他功能：异步和异步生成器-理解" class="headerlink" title="其他功能：异步和异步生成器+理解"></a>其他功能：异步和异步生成器+理解</h3><p>与普通的async / await一起，Python还使async用于在异步迭代器上进行迭代。异步迭代器的目的是使它能够在迭代时在每个阶段调用异步代码。</p>
+<p>这个概念的自然扩展是异步生成器。回想一下，您可以在本地协程中使用wait，return或yield。在Python 3.6中（通过PEP 525）可以在协程中使用yield，它引入了异步生成器，目的是允许在同一个协程函数体中使用wait和yield：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">mygen</span><span class="params">(u: int = <span class="number">10</span>)</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="string">"""Yield powers of 2."""</span></span><br><span class="line"><span class="meta">... </span>    i = <span class="number">0</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">while</span> i &lt; u:</span><br><span class="line"><span class="meta">... </span>        <span class="keyword">yield</span> <span class="number">2</span> ** i</span><br><span class="line"><span class="meta">... </span>        i += <span class="number">1</span></span><br><span class="line"><span class="meta">... </span>        <span class="keyword">await</span> asyncio.sleep(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>最后但并非最不重要的一点是，Python使用async for启用了异步理解。 像它的堂兄一样，这主要是句法糖</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="comment"># This does *not* introduce concurrent execution</span></span><br><span class="line"><span class="meta">... </span>    <span class="comment"># It is meant to show syntax only</span></span><br><span class="line"><span class="meta">... </span>    g = [i <span class="keyword">async</span> <span class="keyword">for</span> i <span class="keyword">in</span> mygen()]</span><br><span class="line"><span class="meta">... </span>    f = [j <span class="keyword">async</span> <span class="keyword">for</span> j <span class="keyword">in</span> mygen() <span class="keyword">if</span> <span class="keyword">not</span> (j // <span class="number">3</span> % <span class="number">5</span>)]</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> g, f</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g, f = asyncio.run(main())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>g</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">64</span>, <span class="number">128</span>, <span class="number">256</span>, <span class="number">512</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">16</span>, <span class="number">32</span>, <span class="number">256</span>, <span class="number">512</span>]</span><br></pre></td></tr></table></figure>
+
+<p>这是一个关键的区别：异步生成器和理解都不会使迭代并发。他们所做的只是提供同步对象的外观，但具有使所讨论的循环放弃对事件循环的控制权以便其他协程运行的能力。</p>
+<p>换句话说，异步迭代器和异步生成器并未设计为在序列或迭代器上同时映射某些功能。它们只是为了让封闭的协程允许其他任务轮流使用。仅在使用plain for或with会“破坏”协程中await的性质的情况下，才需要async for和async with语句。异步和并发之间的区别是要把握的关键。</p>
+<h3 id="事件循环和asyncio-run（）"><a href="#事件循环和asyncio-run（）" class="headerlink" title="事件循环和asyncio.run（）"></a>事件循环和asyncio.run（）</h3><p>您可以将事件循环想像为while True循环，它监视协程，获取有关空闲状态的反馈并四处寻找可以同时执行的事情。当协程正在等待的东西可用时，它能够唤醒一个空闲的协程。</p>
+<p>到目前为止，事件循环的整个管理已由一个函数调用隐式处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asyncio.run(main())  <span class="comment"># Python 3.7+</span></span><br></pre></td></tr></table></figure>
+
+<p>Python 3.7中引入的asyncio.run（）负责获取事件循环，运行任务直到将其标记为完成，然后关闭事件循环。</p>
+<p>使用get_event_loop（），可以更广泛地管理asyncio事件循环。 典型的模式如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">loop = asyncio.get_event_loop()</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    loop.run_until_complete(main())</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    loop.close()</span><br></pre></td></tr></table></figure>
+
+<p>在较早的示例中，您可能会看到loop.get_event_loop（）随处可见，但是除非您特别需要微调对事件循环管理的控制，否则asyncio.run（）对于大多数程序而言就足够了。</p>
+<p>如果确实需要与Python程序中的事件循环进行交互，则循环是一种老式的Python对象，它支持使用loop.is_running（）和loop.is_closed（）进行内省。 如果您需要获得更精细的控制，则可以进行操作，例如在通过将循环作为参数传递来计划回调的过程中。</p>
+<p>更关键的是要对事件循环的机制有一些了解。 以下是有关事件循环的一些要点。</p>
+<p>＃1：协同程序只有在与事件循环相关联的情况下，才能自行完成很多工作。</p>
+<p>您之前在有关发电机的说明中已经看到了这一点，但值得重申。 如果您有一个等待他人的主要协程，则简单地单独调用它几乎没有效果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> asyncio</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    print(<span class="string">"Hello ..."</span>)</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">await</span> asyncio.sleep(<span class="number">1</span>)</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">"World!"</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>routine = main()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>routine</span><br><span class="line">&lt;coroutine object main at <span class="number">0x1027a6150</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>请记住使用asyncio.run（）通过调度main（）协程（未来对象）在事件循环上执行来实际强制执行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>asyncio.run(routine)</span><br><span class="line">Hello ...</span><br><span class="line">World!</span><br></pre></td></tr></table></figure>
+
+<p>（其他协程可以使用await执行。通常只将main（）包装在asyncio.run（）中，然后从那里调用带有await的链式协程。）</p>
+<p>＃2：默认情况下，异步IO事件循环在单个线程和单个CPU内核上运行。通常，在一个CPU内核中运行一个单线程事件循环绰绰有余。也可以跨多个内核运行事件循环。请查看约翰·里斯（John Reese）的演讲，以获取更多信息，并被警告您的笔记本电脑可能会自燃。</p>
+<p>＃3。事件循环是可插入的。也就是说，如果您确实需要，可以编写自己的事件循环实现，并使它运行相同的任务。这在uvloop软件包中得到了很好的演示，该软件包是Cython中事件循环的实现。</p>
+<p>这就是术语“可插入事件循环”的含义：您可以使用事件循环的任何可行实现，而与协程本身的结构无关。 asyncio程序包本身带有两种不同的事件循环实现，默认实现基于选择器模块。 （第二种实现仅适用于Windows。）</p>
+<h2 id="完整程序：异步请求"><a href="#完整程序：异步请求" class="headerlink" title="完整程序：异步请求"></a>完整程序：异步请求</h2><p>到目前为止，您已经做到了，现在该是有趣而轻松的部分了。在本部分中，您将使用aiohttp（一个非常快的异步HTTP客户端/服务器框架）构建一个抓取网址的网址收集器areq.py。 （我们只需要客户端部分。）这样的工具可用于映射站点集群之间的连接，链接形成有向图。</p>
+<blockquote>
+<p>注意：您可能想知道为什么Python的请求包与异步IO不兼容。请求建立在urllib3的顶部，而urllib3则使用Python的http和套接字模块。</p>
+</blockquote>
+<blockquote>
+<p>默认情况下，套接字操作处于阻塞状态。这意味着Python不会喜欢await request.get（url），因为.get（）无法等待。相反，aiohttp中的几乎所有内容都是可等待的协程，例如session.request（）和response.text（）。否则，它是一个很棒的软件包，但是您通过使用异步代码中的请求来对自己造成损害。</p>
+</blockquote>
+<p>高级程序结构如下所示：</p>
+<ol>
+<li><p>从本地文件urls.txt中读取URL序列。</p>
+</li>
+<li><p>发送对URL的GET请求并解码结果内容。如果失败，请在此处停止输入URL。</p>
+</li>
+<li><p>在响应的HTML中的href标记内搜索URL。</p>
+</li>
+<li><p>将结果写到foundurls.txt。</p>
+</li>
+<li><p>尽可能异步和同时执行上述所有操作。 （将aiohttp用于请求，将aiofiles用于文件附件。这是两个非常适合异步IO模型的IO主要示例。）</p>
+</li>
+</ol>
+<p>这是urls.txt的内容。它并不庞大，并且包含流量最高的网站：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat urls.txt</span><br><span class="line">https://regex101.com/</span><br><span class="line">https://docs.python.org/3/this-url-will-404.html</span><br><span class="line">https://www.nytimes.com/guides/</span><br><span class="line">https://www.mediamatters.org/</span><br><span class="line">https://1.1.1.1/</span><br><span class="line">https://www.politico.com/tipsheets/morning-money</span><br><span class="line">https://www.bloomberg.com/markets/economics</span><br><span class="line">https://www.ietf.org/rfc/rfc2616.txt</span><br></pre></td></tr></table></figure>
+
+<p>列表中的第二个URL应该返回404响应，您需要对其进行适当处理。 如果您正在运行此程序的扩展版本，则可能需要处理比这更棘手的问题，例如服务器断开连接和无止尽的重定向。</p>
+<p>请求本身应该使用单个会话发出，以充分利用会话的内部连接池。</p>
+<p>让我们看一下完整的程序。 我们将逐步介绍以下内容：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># areq.py</span></span><br><span class="line"></span><br><span class="line"><span class="string">"""Asynchronously get links embedded in multiple pages' HMTL."""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> IO</span><br><span class="line"><span class="keyword">import</span> urllib.error</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> aiofiles</span><br><span class="line"><span class="keyword">import</span> aiohttp</span><br><span class="line"><span class="keyword">from</span> aiohttp <span class="keyword">import</span> ClientSession</span><br><span class="line"></span><br><span class="line">logging.basicConfig(</span><br><span class="line">    format=<span class="string">"%(asctime)s %(levelname)s:%(name)s: %(message)s"</span>,</span><br><span class="line">    level=logging.DEBUG,</span><br><span class="line">    datefmt=<span class="string">"%H:%M:%S"</span>,</span><br><span class="line">    stream=sys.stderr,</span><br><span class="line">)</span><br><span class="line">logger = logging.getLogger(<span class="string">"areq"</span>)</span><br><span class="line">logging.getLogger(<span class="string">"chardet.charsetprober"</span>).disabled = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">HREF_RE = re.compile(<span class="string">r'href="(.*?)"'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">fetch_html</span><span class="params">(url: str, session: ClientSession, **kwargs)</span> -&gt; str:</span></span><br><span class="line">    <span class="string">"""GET request wrapper to fetch page HTML.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    kwargs are passed to `session.request()`.</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    resp = <span class="keyword">await</span> session.request(method=<span class="string">"GET"</span>, url=url, **kwargs)</span><br><span class="line">    resp.raise_for_status()</span><br><span class="line">    logger.info(<span class="string">"Got response [%s] for URL: %s"</span>, resp.status, url)</span><br><span class="line">    html = <span class="keyword">await</span> resp.text()</span><br><span class="line">    <span class="keyword">return</span> html</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(url: str, session: ClientSession, **kwargs)</span> -&gt; set:</span></span><br><span class="line">    <span class="string">"""Find HREFs in the HTML of `url`."""</span></span><br><span class="line">    found = set()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        html = <span class="keyword">await</span> fetch_html(url=url, session=session, **kwargs)</span><br><span class="line">    <span class="keyword">except</span> (</span><br><span class="line">        aiohttp.ClientError,</span><br><span class="line">        aiohttp.http_exceptions.HttpProcessingError,</span><br><span class="line">    ) <span class="keyword">as</span> e:</span><br><span class="line">        logger.error(</span><br><span class="line">            <span class="string">"aiohttp exception for %s [%s]: %s"</span>,</span><br><span class="line">            url,</span><br><span class="line">            getattr(e, <span class="string">"status"</span>, <span class="literal">None</span>),</span><br><span class="line">            getattr(e, <span class="string">"message"</span>, <span class="literal">None</span>),</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> found</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        logger.exception(</span><br><span class="line">            <span class="string">"Non-aiohttp exception occured:  %s"</span>, getattr(e, <span class="string">"__dict__"</span>, &#123;&#125;)</span><br><span class="line">        )</span><br><span class="line">        <span class="keyword">return</span> found</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">for</span> link <span class="keyword">in</span> HREF_RE.findall(html):</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                abslink = urllib.parse.urljoin(url, link)</span><br><span class="line">            <span class="keyword">except</span> (urllib.error.URLError, ValueError):</span><br><span class="line">                logger.exception(<span class="string">"Error parsing URL: %s"</span>, link)</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                found.add(abslink)</span><br><span class="line">        logger.info(<span class="string">"Found %d links for %s"</span>, len(found), url)</span><br><span class="line">        <span class="keyword">return</span> found</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">write_one</span><span class="params">(file: IO, url: str, **kwargs)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">    <span class="string">"""Write the found HREFs from `url` to `file`."""</span></span><br><span class="line">    res = <span class="keyword">await</span> parse(url=url, **kwargs)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> res:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiofiles.open(file, <span class="string">"a"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> res:</span><br><span class="line">            <span class="keyword">await</span> f.write(<span class="string">f"<span class="subst">&#123;url&#125;</span>\t<span class="subst">&#123;p&#125;</span>\n"</span>)</span><br><span class="line">        logger.info(<span class="string">"Wrote results for source URL: %s"</span>, url)</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">bulk_crawl_and_write</span><span class="params">(file: IO, urls: set, **kwargs)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">    <span class="string">"""Crawl &amp; write concurrently to `file` for multiple `urls`."""</span></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        tasks = []</span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> urls:</span><br><span class="line">            tasks.append(</span><br><span class="line">                write_one(file=file, url=url, session=session, **kwargs)</span><br><span class="line">            )</span><br><span class="line">        <span class="keyword">await</span> asyncio.gather(*tasks)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    <span class="keyword">import</span> pathlib</span><br><span class="line">    <span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">    <span class="keyword">assert</span> sys.version_info &gt;= (<span class="number">3</span>, <span class="number">7</span>), <span class="string">"Script requires Python 3.7+."</span></span><br><span class="line">    here = pathlib.Path(__file__).parent</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> open(here.joinpath(<span class="string">"urls.txt"</span>)) <span class="keyword">as</span> infile:</span><br><span class="line">        urls = set(map(str.strip, infile))</span><br><span class="line"></span><br><span class="line">    outpath = here.joinpath(<span class="string">"foundurls.txt"</span>)</span><br><span class="line">    <span class="keyword">with</span> open(outpath, <span class="string">"w"</span>) <span class="keyword">as</span> outfile:</span><br><span class="line">        outfile.write(<span class="string">"source_url\tparsed_url\n"</span>)</span><br><span class="line"></span><br><span class="line">    asyncio.run(bulk_crawl_and_write(file=outpath, urls=urls))</span><br></pre></td></tr></table></figure>
+
+<p>该脚本比我们最初的玩具程序要长，所以让我们对其进行分解。</p>
+<p>常量HREF_RE是一个正则表达式，用于提取我们最终在HTML中搜索的href标签：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>HREF_RE.search(<span class="string">'Go to &lt;a href="https://realpython.com/"&gt;Real Python&lt;/a&gt;'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">15</span>, <span class="number">45</span>), match=<span class="string">'href="https://realpython.com/"'</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>协程fetch_html（）是GET请求的包装，用于发出请求并解码生成的页面HTML。 它发出请求，等待响应，并在非200状态下立即引发：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">resp = <span class="keyword">await</span> session.request(method=<span class="string">"GET"</span>, url=url, **kwargs)</span><br><span class="line">resp.raise_for_status()</span><br></pre></td></tr></table></figure>
+
+<p>如果状态正常，则fetch_html（）返回页面HTML（str）。 值得注意的是，此功能没有完成任何异常处理。 逻辑是将该异常传播给调用者，并在那里进行处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">html = <span class="keyword">await</span> resp.text()</span><br></pre></td></tr></table></figure>
+
+<p>我们正在等待session.request（）和resp.text（），因为它们是等待的协程。否则，请求/响应周期将是应用程序的长尾，耗时的部分，但是对于异步IO，fetch_html（）可使事件循环在其他易于使用的作业（例如，解析和写入已获取的URL）上工作。</p>
+<p>协同程序链中的下一个是parse（），它在fetch_html（）中等待给定的URL，然后从该页面的HTML中提取所有href标记，确保每个标记均有效并将其格式化为绝对路径。</p>
+<p>诚然，parse（）的第二部分是阻塞的，但是它由快速的正则表达式匹配组成，并确保将发现的链接设置为绝对路径。</p>
+<p>在这种特定情况下，此同步代码应该快速而不起眼。但是，请记住，给定协程中的任何行都会阻塞其他协程，除非该行使用yield，await或return。如果解析是一个比较繁琐的过程，则可能需要考虑使用loop.run_in_executor（）在其自己的过程中运行此部分。</p>
+<p>接下来，协程write（）接收一个文件对象和一个URL，然后等待parse（）返回一组已解析的URL，通过使用aiofiles（用于打包的包）将每个URL及其源URL异步写入文件中。异步文件IO。</p>
+<p>最后，bulk_crawl_and_write（）是脚本协程链的主要入口。它使用单个会话，并为最终从urls.txt中读取的每个URL创建一个任务。</p>
+<p>以下是一些值得一提的其他要点：</p>
+<ul>
+<li><p>默认的ClientSession具有最多100个打开连接的适配器。要更改此设置，请将asyncio.connector.TCPConnector的实例传递给ClientSession。您还可以基于每个主机指定限制。</p>
+</li>
+<li><p>您可以为整个会话和单个请求指定最大超时。</p>
+</li>
+<li><p>该脚本还使用async with，它与异步上下文管理器一起使用。我没有专门讨论这个概念，因为从同步上下文管理器到异步上下文管理器的过渡非常简单。后者必须定义.__ aenter <strong>（）和.</strong> aexit <strong>（）而不是.</strong> exit <strong>（）和.</strong> enter __（）。如您所料，async with只能在用async def声明的协程函数中使用。</p>
+</li>
+</ul>
+<p>如果您想了解更多内容，请在GitHub上的本教程随附文件中还附带注释和文档字符串。</p>
+<p>这是所有执行情况的结果，因为areq.py在一秒钟之内即可获取，解析并保存9个网址的结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ python3 areq.py</span><br><span class="line">21:33:22 DEBUG:asyncio: Using selector: KqueueSelector</span><br><span class="line">21:33:22 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://www.mediamatters.org/</span><br><span class="line">21:33:22 INFO:areq: Found 115 links <span class="keyword">for</span> https://www.mediamatters.org/</span><br><span class="line">21:33:22 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://www.nytimes.com/guides/</span><br><span class="line">21:33:22 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://www.politico.com/tipsheets/morning-money</span><br><span class="line">21:33:22 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://www.ietf.org/rfc/rfc2616.txt</span><br><span class="line">21:33:22 ERROR:areq: aiohttp exception <span class="keyword">for</span> https://docs.python.org/3/this-url-will-404.html [404]: Not Found</span><br><span class="line">21:33:22 INFO:areq: Found 120 links <span class="keyword">for</span> https://www.nytimes.com/guides/</span><br><span class="line">21:33:22 INFO:areq: Found 143 links <span class="keyword">for</span> https://www.politico.com/tipsheets/morning-money</span><br><span class="line">21:33:22 INFO:areq: Wrote results <span class="keyword">for</span> <span class="built_in">source</span> URL: https://www.mediamatters.org/</span><br><span class="line">21:33:22 INFO:areq: Found 0 links <span class="keyword">for</span> https://www.ietf.org/rfc/rfc2616.txt</span><br><span class="line">21:33:22 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://1.1.1.1/</span><br><span class="line">21:33:22 INFO:areq: Wrote results <span class="keyword">for</span> <span class="built_in">source</span> URL: https://www.nytimes.com/guides/</span><br><span class="line">21:33:22 INFO:areq: Wrote results <span class="keyword">for</span> <span class="built_in">source</span> URL: https://www.politico.com/tipsheets/morning-money</span><br><span class="line">21:33:22 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://www.bloomberg.com/markets/economics</span><br><span class="line">21:33:22 INFO:areq: Found 3 links <span class="keyword">for</span> https://www.bloomberg.com/markets/economics</span><br><span class="line">21:33:22 INFO:areq: Wrote results <span class="keyword">for</span> <span class="built_in">source</span> URL: https://www.bloomberg.com/markets/economics</span><br><span class="line">21:33:23 INFO:areq: Found 36 links <span class="keyword">for</span> https://1.1.1.1/</span><br><span class="line">21:33:23 INFO:areq: Got response [200] <span class="keyword">for</span> URL: https://regex101.com/</span><br><span class="line">21:33:23 INFO:areq: Found 23 links <span class="keyword">for</span> https://regex101.com/</span><br><span class="line">21:33:23 INFO:areq: Wrote results <span class="keyword">for</span> <span class="built_in">source</span> URL: https://regex101.com/</span><br><span class="line">21:33:23 INFO:areq: Wrote results <span class="keyword">for</span> <span class="built_in">source</span> URL: https://1.1.1.1/</span><br></pre></td></tr></table></figure>
+
+<p>不太破旧！ 作为健全性检查，您可以检查输出中的行数。 以我为例，是626，但请注意，这可能会有所波动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ wc -l foundurls.txt</span><br><span class="line">     626 foundurls.txt</span><br><span class="line"></span><br><span class="line">$ head -n 3 foundurls.txt</span><br><span class="line">source_url  parsed_url</span><br><span class="line">https://www.bloomberg.com/markets/economics https://www.bloomberg.com/feedback</span><br><span class="line">https://www.bloomberg.com/markets/economics https://www.bloomberg.com/notices/tos</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>后续步骤：如果您想提高底注，请使此网络爬虫递归。 您可以使用aio-redis跟踪树中已爬网的URL以避免两次请求，并将链接与Python的networkx库连接。</p>
+</blockquote>
+<blockquote>
+<p>记住要友善。 发送1000个并发请求到一个小的，毫无戒心的网站是不好的，不好的，不好的。 有一些方法可以限制您在一批中发出的并发请求，例如使用asyncio的sempahore对象或使用类似这种模式的方法。 如果您不注意此警告，则可能会收到大量TimeoutError异常，最终只会损害您自己的程序。</p>
+</blockquote>
+<h2 id="上下文中的异步IO"><a href="#上下文中的异步IO" class="headerlink" title="上下文中的异步IO"></a>上下文中的异步IO</h2><p>既然您已经看了很多健康的代码，那么让我们退一步，考虑一下什么时候异步IO是理想的选择，以及如何进行比较以得出结论或选择其他并发模型。</p>
+<h3 id="什么时候以及为什么异步IO是正确的选择？"><a href="#什么时候以及为什么异步IO是正确的选择？" class="headerlink" title="什么时候以及为什么异步IO是正确的选择？"></a>什么时候以及为什么异步IO是正确的选择？</h3><p>本教程不适用于异步IO，线程与多处理的扩展论述。但是，了解异步IO何时可能是三个中的最佳候选者很有用。</p>
+<p>异步IO与多处理之间的斗争根本不是一场争斗。实际上，它们可以一起使用。如果您有多个相当统一的CPU约束任务（一个很好的例子是在诸如scikit-learn或keras之类的库中进行网格搜索），那么多处理应该是一个明显的选择。</p>
+<p>如果所有函数都使用阻塞调用，则简单地在每个函数之前放置异步是一个坏主意。 （这实际上可能会使您的代码变慢。）但是，如前所述，异步IO和多处理在某些地方可以和谐共处。</p>
+<p>异步IO与线程之间的竞争更为直接。我在导言中提到“线程很难实现”。全文是，即使在线程似乎易于实现的情况下，由于竞争条件和内存使用等原因，它仍可能导致臭名昭著的无法跟踪的错误。</p>
+<p>由于线程是具有有限可用性的系统资源，因此线程的扩展也往往比异步IO的扩展规模小。在许多计算机上创建数千个线程将失败，因此我不建议您首先尝试。创建数千个异步IO任务是完全可行的。</p>
+<p>当您有多个IO绑定任务时，异步IO会发光，否则这些任务将通过阻塞IO绑定等待时间来控制，例如：</p>
+<ul>
+<li><p>网络IO，无论您的程序是服务器端还是客户端</p>
+</li>
+<li><p>无服务器设计，例如对等，多用户网络（如群组聊天室）</p>
+</li>
+<li><p>您想要模仿“即弃即忘”风格的读/写操作，而不必担心在阅读和写入内容时锁定任何东西</p>
+</li>
+</ul>
+<p>不使用它的最大原因是，await仅支持定义一组特定方法的一组特定对象。如果您要对某个DBMS执行异步读取操作，则不仅需要查找该DBMS的Python包装器，还需要查找支持async / await语法的包装器。包含同步调用的协程会阻止其他协程和任务运行。</p>
+<p>有关使用async / await的库的简短列表，请参阅本教程末尾的列表。</p>
+<h3 id="异步IO是，但是哪个？"><a href="#异步IO是，但是哪个？" class="headerlink" title="异步IO是，但是哪个？"></a>异步IO是，但是哪个？</h3><p>本教程重点介绍异步IO，异步/等待语法以及如何将异步用于事件循环管理和指定任务。当然，asyncio并不是唯一的异步IO库。纳撒尼尔·史密斯（Nathaniel J.Smith）的观察表明：</p>
+<blockquote>
+<p>在几年内，asyncio可能会沦落为成为精明的开发人员避免使用的stdlib库之一，例如urllib2。</p>
+</blockquote>
+<blockquote>
+<p>…</p>
+</blockquote>
+<blockquote>
+<p>实际上，我要说的是asyncio是其自身成功的受害者：设计时，它使用了可能的最佳方法；但是从那时起，异步的启发下的工作（例如添加异步/等待）就改变了格局，以便我们可以做得更好，现在异步已被其早期的承诺所束缚。 （资源）</p>
+</blockquote>
+<p>为此，尽管使用不同的API和不同的方法，但一些可以做asyncio的大牌替代品是curio和trio。我个人认为，如果您要构建大小适中，简单明了的程序，仅使用asyncio就足够了并且可以理解，并且可以避免在Python标准库之外添加其他大型依赖项。</p>
+<p>但是，无论如何，请查看curio和trio，您可能会发现它们以相同的方式完成了对您来说对用户而言更直观的事情。这里介绍的许多与软件包无关的概念也应渗透到其他异步IO软件包中。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>在接下来的几节中，您将介绍asyncio和async / await的其他各个部分，这些部分到目前为止还没有很好地适合本教程，但是对于构建和理解完整的程序仍然很重要。</p>
+<p>其他顶级异步功能<br>除了asyncio.run（）之外，您还看到了其他一些包级功能，例如asyncio.create_task（）和asyncio.gather（）。</p>
+<p>您可以使用create_task（）安排协程对象的执行，然后使用asyncio.run（）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> asyncio</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">coro</span><span class="params">(seq)</span> -&gt; list:</span></span><br><span class="line"><span class="meta">... </span>    <span class="string">"""'IO' wait time is proportional to the max element."""</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">await</span> asyncio.sleep(max(seq))</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> list(reversed(seq))</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    <span class="comment"># This is a bit redundant in the case of one task</span></span><br><span class="line"><span class="meta">... </span>    <span class="comment"># We could use `await coro([3, 2, 1])` on its own</span></span><br><span class="line"><span class="meta">... </span>    t = asyncio.create_task(coro([<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]))  <span class="comment"># Python 3.7+</span></span><br><span class="line"><span class="meta">... </span>    <span class="keyword">await</span> t</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">f't: type <span class="subst">&#123;type(t)&#125;</span>'</span>)</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">f't done: <span class="subst">&#123;t.done()&#125;</span>'</span>)</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>t = asyncio.run(main())</span><br><span class="line">t: type &lt;<span class="class"><span class="keyword">class</span> '<span class="title">_asyncio</span>.<span class="title">Task</span>'&gt;</span></span><br><span class="line"><span class="class"><span class="title">t</span> <span class="title">done</span>:</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>这种模式有一个精妙之处：如果您不等待main（）中的内容，它可能会在main（）本身表示已完成之前就结束了。因为asyncio.run（main（））调用loop.run_until_complete（main（）），所以事件循环仅关注main（）完成（而不等待），而不涉及在main（）中创建的任务是否完成。完成。如果不等待，循环的其他任务可能会在完成之前被取消。如果需要获取当前待处理任务的列表，则可以使用asyncio.Task.all_tasks（）。</p>
+<p>注意：asyncio.create_task（）是Python 3.7中引入的。在Python 3.6或更低版本中，请使用asyncio.ensure_future（）代替create_task（）。</p>
+<p>另外，还有asyncio.gather（）。尽管它没有做任何特别的事情，但是collect（）的目的是将协程（期货）的集合整齐地放入单个未来中。结果，它返回一个未来的对象，并且，如果您等待asyncio.gather（）并指定多个任务或协程，则您正在等待所有这些任务或协程完成。 （这与我们前面的示例有点类似queue.join（）。）collect（）的结果将是输入结果的列表：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> time</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    t = asyncio.create_task(coro([<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]))</span><br><span class="line"><span class="meta">... </span>    t2 = asyncio.create_task(coro([<span class="number">10</span>, <span class="number">5</span>, <span class="number">0</span>]))  <span class="comment"># Python 3.7+</span></span><br><span class="line"><span class="meta">... </span>    print(<span class="string">'Start:'</span>, time.strftime(<span class="string">'%X'</span>))</span><br><span class="line"><span class="meta">... </span>    a = <span class="keyword">await</span> asyncio.gather(t, t2)</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">'End:'</span>, time.strftime(<span class="string">'%X'</span>))  <span class="comment"># Should be 10 seconds</span></span><br><span class="line"><span class="meta">... </span>    print(<span class="string">f'Both tasks done: <span class="subst">&#123;all((t.done(), t2.done()))&#125;</span>'</span>)</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">return</span> a</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = asyncio.run(main())</span><br><span class="line">Start: <span class="number">16</span>:<span class="number">20</span>:<span class="number">11</span></span><br><span class="line">End: <span class="number">16</span>:<span class="number">20</span>:<span class="number">21</span></span><br><span class="line">Both tasks done: <span class="literal">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a</span><br><span class="line">[[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], [<span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>]]</span><br></pre></td></tr></table></figure>
+
+<p>您可能已经注意到，collect（）等待传递给它的Future或协程的整个结果集。 或者，您可以遍历asyncio.as_completed（）以按完成顺序获取任务完成时的任务。 该函数返回一个迭代器，该迭代器在完成任务时产生任务。 下面，coro（[3，2，1]）的结果将在coro（[10，5，0]）完成之前可用，而collect（）则不是这样：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">async</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">... </span>    t = asyncio.create_task(coro([<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]))</span><br><span class="line"><span class="meta">... </span>    t2 = asyncio.create_task(coro([<span class="number">10</span>, <span class="number">5</span>, <span class="number">0</span>]))</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">'Start:'</span>, time.strftime(<span class="string">'%X'</span>))</span><br><span class="line"><span class="meta">... </span>    <span class="keyword">for</span> res <span class="keyword">in</span> asyncio.as_completed((t, t2)):</span><br><span class="line"><span class="meta">... </span>        compl = <span class="keyword">await</span> res</span><br><span class="line"><span class="meta">... </span>        print(<span class="string">f'res: <span class="subst">&#123;compl&#125;</span> completed at <span class="subst">&#123;time.strftime(<span class="string">"%X"</span>)&#125;</span>'</span>)</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">'End:'</span>, time.strftime(<span class="string">'%X'</span>))</span><br><span class="line"><span class="meta">... </span>    print(<span class="string">f'Both tasks done: <span class="subst">&#123;all((t.done(), t2.done()))&#125;</span>'</span>)</span><br><span class="line">...</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>a = asyncio.run(main())</span><br><span class="line">Start: <span class="number">09</span>:<span class="number">49</span>:<span class="number">07</span></span><br><span class="line">res: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] completed at <span class="number">09</span>:<span class="number">49</span>:<span class="number">10</span></span><br><span class="line">res: [<span class="number">0</span>, <span class="number">5</span>, <span class="number">10</span>] completed at <span class="number">09</span>:<span class="number">49</span>:<span class="number">17</span></span><br><span class="line">End: <span class="number">09</span>:<span class="number">49</span>:<span class="number">17</span></span><br><span class="line">Both tasks done: <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+
+<p>最后，您可能还会看到asyncio.ensure_future（）。 您几乎不需要它，因为它是一个较低级的管道API，并在很大程度上被稍后介绍的create_task（）所取代。</p>
+<h3 id="等待的先例"><a href="#等待的先例" class="headerlink" title="等待的先例"></a>等待的先例</h3><p>尽管它们的行为有些相似，但是await关键字的优先级远高于yield。 这意味着，由于绑定更紧密，因此在许多情况下，您需要在yield from语句中使用括号，而在类似的await语句中则不需要。 有关更多信息，请参见PEP 492中的await表达式示例。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在，您已经可以使用async / await和由此建立的库。 以下是您所涵盖内容的回顾：</p>
+<ul>
+<li><p>异步IO作为与语言无关的模型，以及通过使协程彼此间接通信来实现并发的方法</p>
+</li>
+<li><p>Python新的async和await关键字的细节，用于标记和定义协程</p>
+</li>
+<li><p>asyncio，Python包，提供用于运行和管理协程的API</p>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/python/" rel="tag">python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/front-end/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+                <span class="level-item">数据库基础知识</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">Comments</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.biye.pro/python/Python-AsyncIO-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/';
+        this.page.identifier = 'python/Python-AsyncIO-异步编程完全指南/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'biyepro' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-4-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                    <figure class="image is-128x128 has-mb-6">
+                        <img class="" src="/images/avatar.jpg" alt="毕业Pro">
+                    </figure>
+                    
+                    <p class="is-size-4 is-block">
+                        毕业Pro
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        专业计算机程序代做
+                    </p>
+                    
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <a href="/archives">
+                        <p class="title has-text-weight-normal">
+                            28
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <a href="/categories">
+                        <p class="title has-text-weight-normal">
+                            6
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <a href="/tags">
+                        <p class="title has-text-weight-normal">
+                            22
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://biye.pro" target="_blank" rel="noopener">
+                Follow</a>
+        </div>
+        
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" rel="noopener"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Categories
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/front-end/">
+            <span class="level-start">
+                <span class="level-item">front-end</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">15</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/front-end/nuxtjs%E6%95%99%E7%A8%8B/">
+            <span class="level-start">
+                <span class="level-item">nuxtjs教程</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/hardware/">
+            <span class="level-start">
+                <span class="level-item">hardware</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/other/">
+            <span class="level-start">
+                <span class="level-item">other</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/others/">
+            <span class="level-start">
+                <span class="level-item">others</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/python/">
+            <span class="level-start">
+                <span class="level-item">python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/apple/" style="font-size: 11.67px;">apple</a> <a href="/tags/calendar/" style="font-size: 10px;">calendar</a> <a href="/tags/charles/" style="font-size: 11.67px;">charles</a> <a href="/tags/chrome/" style="font-size: 11.67px;">chrome</a> <a href="/tags/clover/" style="font-size: 10px;">clover</a> <a href="/tags/css/" style="font-size: 13.33px;">css</a> <a href="/tags/devtools/" style="font-size: 10px;">devtools</a> <a href="/tags/gtd/" style="font-size: 10px;">gtd</a> <a href="/tags/hackintosh/" style="font-size: 11.67px;">hackintosh</a> <a href="/tags/html/" style="font-size: 11.67px;">html</a> <a href="/tags/iphone/" style="font-size: 10px;">iphone</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/javascript/" style="font-size: 20px;">javascript</a> <a href="/tags/mac/" style="font-size: 10px;">mac</a> <a href="/tags/macos/" style="font-size: 11.67px;">macos</a> <a href="/tags/nuxtjs/" style="font-size: 16.67px;">nuxtjs</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/sql/" style="font-size: 10px;">sql</a> <a href="/tags/ssr/" style="font-size: 16.67px;">ssr</a> <a href="/tags/switchyomega/" style="font-size: 10px;">switchyomega</a> <a href="/tags/vue/" style="font-size: 18.33px;">vue</a> <a href="/tags/%E9%BB%91%E8%8B%B9%E6%9E%9C/" style="font-size: 11.67px;">黑苹果</a>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-20T04:09:49.000Z">2020-07-20</time></div>
+                    <a href="/python/Python-AsyncIO-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Python AsyncIO 异步编程完全指南</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/python/">python</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-01T05:05:25.000Z">2020-07-01</time></div>
+                    <a href="/front-end/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="title has-link-black-ter is-size-6 has-text-weight-normal">数据库基础知识</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-21T13:16:07.000Z">2020-06-21</time></div>
+                    <a href="/python/%E5%85%A8%E7%BD%91%E6%96%B0%E9%97%BB%E5%85%A8%E7%9F%A5%E9%81%93%E4%B9%8B%E5%88%A9%E7%94%A8Python-AsyncIO%E6%8A%93%E5%8F%96%E7%99%BE%E5%BA%A6%E6%96%B0%E9%97%BB/" class="title has-link-black-ter is-size-6 has-text-weight-normal">全网新闻全知道之利用 Python AsyncIO 抓取百度新闻</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/python/">python</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-08T13:55:23.000Z">2020-06-08</time></div>
+                    <a href="/other/%E5%85%A8%E7%BD%91%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88/" class="title has-link-black-ter is-size-6 has-text-weight-normal">全网开发小工具集合</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/other/">other</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-02T02:57:50.000Z">2020-06-02</time></div>
+                    <a href="/python/Python-%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90%E4%B8%80%E6%8A%8A%E6%A2%AD%EF%BC%88%E9%95%BF%E6%9C%9F%E6%9B%B4%E6%96%B0%EF%BC%89/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Python 学习资源一把梭（长期更新）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/python/">python</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/favicon-32x32.png" alt="Python AsyncIO 异步编程完全指南" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2020 毕业Pro&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("en");</script>
+
+
+<script>
+var IcarusThemeSettings = {
+    site: {
+        url: 'https://blog.biye.pro',
+        external_link: {"enable":true,"exclude":[]}
+    },
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+
+
+<script src="/js/animation.js"></script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+<script src="/js/gallery.js" defer></script>
+
+
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
