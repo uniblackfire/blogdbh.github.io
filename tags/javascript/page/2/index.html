@@ -148,6 +148,117 @@ gtag('config', 'UA-166814285-1');
 
     
 
+    
+
+
+    
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                
+                <time class="level-item has-text-grey" datetime="2019-03-27T07:16:26.000Z">2019-03-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/front-end/">front-end</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 minutes read (About 1296 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/front-end/Vue%E5%9F%BA%E7%A1%80/">Vue基础</a>
+            
+        </h1>
+        <div class="content">
+            <ol>
+<li>由于 JavaScript 的限制，Vue 不能检测以下变动的数组：<ol>
+<li>当你利用索引直接设置一个项时，这样写不会触发更新： <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vm.items[indexOfItem] = newValue</span><br></pre></td></tr></table></figure>
+ 正确的方法： <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Vue.set</span></span><br><span class="line">Vue.set(vm.items, indexOfItem, newValue)</span><br><span class="line"><span class="comment">// Array.prototype.splice</span></span><br><span class="line">vm.items.splice(indexOfItem, <span class="number">1</span>, newValue)</span><br><span class="line"><span class="comment">// 你也可以使用 vm.$set 实例方法，该方法是全局方法 Vue.set 的一个别名：</span></span><br><span class="line">vm.$<span class="keyword">set</span>(vm.items, indexOfItem, newValue)</span><br></pre></td></tr></table></figure></li>
+<li>当你修改数组的长度时，这样写不会触发更新： <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vm.items.length = newLength</span><br></pre></td></tr></table></figure>
+ 正确的方法： <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vm.items.splice(newLength)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li>不推荐同时使用 <code>v-if</code> 和 <code>v-for</code>。当 <code>v-if</code> 与 <code>v-for</code> 一起使用时，<code>v-for</code> 具有比 <code>v-if</code> 更高的优先级。</li>
+<li>在使用 <code>v-for</code> 时，尽量提供 <code>key</code>。2.2.0+ 的版本里，当在组件中使用 <code>v-for</code> 时，<code>key</code> 现在是必须的。</li>
+<li>使用修饰符时，顺序很重要；相应的代码会以同样的顺序产生。因此，用 <code>v-on:click.prevent.self</code> 会阻止所有的点击，而 <code>v-on:click.self.prevent</code> 只会阻止对元素自身的点击。</li>
+<li>选择框，如果 <code>v-model</code> 表达式的初始值未能匹配任何选项，<code>&lt;select&gt;</code> 元素将被渲染为“未选中”状态。在 iOS 中，这会使用户无法选择第一个选项。因为这样的情况下，iOS 不会触发 <code>change</code> 事件。因此，更推荐像上面这样提供一个值为空的禁用选项(<code>&lt;option disabled value=&quot;&quot;&gt;请选择&lt;/option&gt;</code>)。</li>
+<li>如果要自动过滤用户输入的首尾空白字符，可以给 <code>v-model</code> 添加 <code>trim</code> 修饰符。</li>
+<li>Vue 提供了一个 <code>$listeners</code> 属性，它是一个对象，里面包含了作用在这个组件上的所有监听器。有了这个 <code>$listeners</code> 属性，你就可以配合 <code>v-on=&quot;$listeners&quot;</code> 将所有的事件监听器指向这个组件的某个特定的子元素。</li>
+<li><a href="https://cn.vuejs.org/v2/guide/components-custom-events.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6"><code>.sync</code> 修饰符</a></li>
+<li>插槽<ol>
+<li>在向具名插槽提供内容的时候，我们可以在一个 <code>&lt;template&gt;</code> 元素上使用 <code>v-slot</code> 指令，并以 <code>v-slot</code> 的参数的形式提供其名称</li>
+</ol>
+</li>
+<li>混入 <code>mixin</code><ol>
+<li>同名钩子函数将混合为一个数组，因此都将被调用。另外，混入对象的钩子将在组件自身钩子之前调用。</li>
+<li>值为对象的选项，例如 <code>methods</code>, <code>components</code> 和 <code>directives</code>，将被混合为同一个对象。两个对象键名冲突时，取组件对象的键值对。</li>
+</ol>
+</li>
+<li>$nextTick<ol>
+<li>为了在数据变化之后等待 Vue 完成更新 DOM ，可以在数据变化之后立即使用 <code>Vue.nextTick(callback)</code> 。这样回调函数在 DOM 更新完成后就会调用。</li>
+</ol>
+</li>
+<li>Vuex<ol>
+<li><code>mapState</code> 获取状态</li>
+<li><code>mapGetters</code> 将 store 中的 <code>getter</code> 映射到局部计算属性</li>
+<li>更改 Vuex 的 store 中的状态的唯一方法是提交 <code>mutation</code>。 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.commit(<span class="string">'increment'</span>)</span><br></pre></td></tr></table></figure></li>
+<li><code>mutation</code> 必须是同步函数</li>
+<li><code>mapMutations</code> 辅助函数将组件中的 <code>methods</code> 映射为 <code>store.commit</code> 调用（需要在根节点注入 store）</li>
+<li>Action 类似于 mutation，不同在于：<ul>
+<li>Action 提交的是 mutation，而不是直接变更状态。</li>
+<li>Action 可以包含任意异步操作。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.dispatch(<span class="string">'increment'</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><code>mapActions</code> 辅助函数将组件的 <code>methods</code> 映射为 <code>store.dispatch</code> 调用（需要先在根节点注入 store）</li>
+<li>当网站足够大时，一个状态树下，根的部分字段繁多，解决这个问题就要模块化 vuex</li>
+<li>默认情况下，模块内部的 action、mutation 和 getter 是注册在全局命名空间的——这样使得多个模块能够对同一 mutation 或 action 作出响应。<blockquote>
+<p>如果希望你的模块具有更高的封装度和复用性，你可以通过添加 namespaced: true 的方式使其成为带命名空间的模块。当模块被注册后，它的所有 getter、action 及 mutation 都会自动根据模块注册的路径调整命名。</p>
+</blockquote>
+</li>
+<li>完整的闭环是 store.dispatch(‘action’) -&gt; action -&gt; commit -&gt; mutation -&gt; getter -&gt; computed</li>
+<li>建议是不论多简单的流程都跑完整个闭环，形成代码的统一，方便后期管理，在组件里只允许出现 dispatch 和 mapGetters，其余的流程都在名为 store 的 vuex 文件夹里进行</li>
+<li>可以打印<code>this.$store</code>查看store里的数据</li>
+<li>如果store的模块里没有加<code>namespaced</code>，则这个模块的数据是全局的，不需要加路径来引用</li>
+</ol>
+</li>
+<li>v-show，v-if 用哪个？<ul>
+<li>权限问题，只要涉及到权限相关的展示无疑要用 v-if</li>
+<li>在没有权限限制下根据用户点击的频次选择，频繁切换的使用 v-show，不频繁切换的使用 v-if</li>
+</ul>
+</li>
+<li>尽量保持每个组件 export default {} 内的方法顺序一致</li>
+<li>在 webpack 里有个 externals，可以忽略不需要打包的库<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">externals: &#123;</span><br><span class="line">    <span class="string">'vue'</span>: <span class="string">'Vue'</span>,</span><br><span class="line">    <span class="string">'vue-router'</span>: <span class="string">'VueRouter'</span>,</span><br><span class="line">    <span class="string">'vuex'</span>: <span class="string">'Vuex'</span>,</span><br><span class="line">    <span class="string">'axios'</span>: <span class="string">'axios'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>nextTick <a href="https://juejin.im/post/5a6fdb846fb9a01cc0268618">https://juejin.im/post/5a6fdb846fb9a01cc0268618</a></li>
+</ol>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    
 
     
     
@@ -446,7 +557,7 @@ gtag('config', 'UA-166814285-1');
                     </p>
                     <a href="/archives">
                         <p class="title has-text-weight-normal">
-                            29
+                            30
                         </p>
                     </a>
                 </div>
@@ -514,7 +625,7 @@ gtag('config', 'UA-166814285-1');
                 <span class="level-item">front-end</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/front-end/nuxtjs%E6%95%99%E7%A8%8B/">
@@ -581,6 +692,19 @@ gtag('config', 'UA-166814285-1');
             
             <div class="media-content">
                 <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-06-24T07:27:34.000Z">2021-06-24</time></div>
+                    <a href="/front-end/%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAPromise/" class="title has-link-black-ter is-size-6 has-text-weight-normal">自己实现一个Promise</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/front-end/">front-end</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <div class="media-content">
+                <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-28T05:24:37.000Z">2020-07-28</time></div>
                     <a href="/front-end/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AE%80%E4%BB%8B/" class="title has-link-black-ter is-size-6 has-text-weight-normal">深度学习简介</a>
                     <p class="is-size-7 is-uppercase">
@@ -629,19 +753,6 @@ gtag('config', 'UA-166814285-1');
             </div>
         </article>
         
-        <article class="media">
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-08T13:55:23.000Z">2020-06-08</time></div>
-                    <a href="/other/%E5%85%A8%E7%BD%91%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B7%A5%E5%85%B7%E9%9B%86%E5%90%88/" class="title has-link-black-ter is-size-6 has-text-weight-normal">全网开发小工具集合</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/other/">other</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
     
@@ -666,7 +777,7 @@ gtag('config', 'UA-166814285-1');
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2020 毕业Pro&nbsp;
+                &copy; 2021 毕业Pro&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> & <a
                         href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a>
                 
